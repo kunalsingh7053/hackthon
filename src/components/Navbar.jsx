@@ -10,10 +10,8 @@ const navItems = ["Home", "Products", "About", "Cart", "Login"];
 const NavBar = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
-
   const audioElementRef = useRef(null);
   const navContainerRef = useRef(null);
-
   const { y: currentScrollY } = useWindowScroll();
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -59,13 +57,16 @@ const NavBar = () => {
   return (
     <div
       ref={navContainerRef}
-      className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6"
+      className="fixed inset-x-0 top-4 z-[200] h-16 border-none transition-all duration-700 sm:inset-x-6"
     >
       <header className="absolute top-1/2 w-full -translate-y-1/2">
         <nav className="flex size-full items-center justify-between p-4">
-          {/* Logo and Shop button */}
           <div className="flex items-center gap-7">
-            <img src="/img/logo.png" alt="logo" className="w-10" />
+            <img
+              src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg"
+              alt="logo"
+              className="w-10 h-10 rounded-full object-cover"
+            />
             <Button
               id="shop-button"
               title="Shop"
@@ -73,8 +74,6 @@ const NavBar = () => {
               containerClass="bg-yellow-400 text-black md:flex hidden items-center justify-center gap-1 hover:bg-yellow-300 transition"
             />
           </div>
-
-          {/* Navigation Links + Audio Button */}
           <div className="flex h-full items-center">
             <div className="hidden md:flex gap-6">
               {navItems.map((item, index) => {
@@ -91,17 +90,11 @@ const NavBar = () => {
                 );
               })}
             </div>
-
             <button
               onClick={toggleAudioIndicator}
               className="ml-10 flex items-center space-x-1 p-1 rounded bg-yellow-400 hover:bg-yellow-300 border border-yellow-500 shadow transition"
             >
-              <audio
-                ref={audioElementRef}
-                className="hidden"
-                src="/audio/loop.mp3"
-                loop
-              />
+              <audio ref={audioElementRef} className="hidden" src="/audio/loop.mp3" loop />
               {[1, 2, 3, 4].map((bar, index) => (
                 <div
                   key={index}
