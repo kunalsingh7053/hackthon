@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useWindowScroll } from "react-use";
 import { useEffect, useRef, useState } from "react";
 import { TiShoppingCart } from "react-icons/ti";
+import { HiMenu, HiX } from "react-icons/hi";
 import Button from "./Button";
 
 const navItems = ["Home", "Products", "About", "Cart", "Login"];
@@ -10,6 +11,7 @@ const navItems = ["Home", "Products", "About", "Cart", "Login"];
 const NavBar = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const audioElementRef = useRef(null);
   const navContainerRef = useRef(null);
   const { y: currentScrollY } = useWindowScroll();
@@ -20,6 +22,8 @@ const NavBar = () => {
     setIsAudioPlaying((prev) => !prev);
     setIsIndicatorActive((prev) => !prev);
   };
+
+  const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
 
   useEffect(() => {
     if (isAudioPlaying) {
@@ -60,8 +64,9 @@ const NavBar = () => {
       className="fixed inset-x-0 top-4 z-[200] h-16 border-none transition-all duration-700 sm:inset-x-6"
     >
       <header className="absolute top-1/2 w-full -translate-y-1/2">
-        <nav className="flex size-full items-center justify-between p-4">
-          <div className="flex items-center gap-7">
+        <nav className="flex size-full items-center justify-between p-4 rounded-xl bg-black/60 backdrop-blur-md shadow-lg">
+          {/* Left: logo + shop button */}
+          <div className="flex items-center gap-4">
             <img
               src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg"
               alt="logo"
@@ -71,46 +76,80 @@ const NavBar = () => {
               id="shop-button"
               title="Shop"
               rightIcon={<TiShoppingCart />}
-              containerClass="bg-yellow-400 text-black md:flex hidden items-center justify-center gap-1 hover:bg-yellow-300 transition"
+              containerClass="bg-yellow-400 text-black hidden md:flex items-center justify-center gap-1 hover:bg-yellow-300 transition"
             />
           </div>
-          <div className="flex h-full items-center">
-            <div className="hidden md:flex gap-6">
-              {navItems.map((item, index) => {
-                let path = "/";
-                if (item !== "Home") path = `/${item.toLowerCase()}`;
-                return (
-                  <a
-                    key={index}
-                    href={path}
-                    className="font-semibold text-yellow-400 hover:text-yellow-300 transition"
-                  >
-                    {item}
-                  </a>
-                );
-              })}
-            </div>
+
+          {/* Center: nav items */}
+          <div className="hidden md:flex gap-6">
+            {navItems.map((item, index) => {
+              let path = "/";
+              if (item !== "Home") path = `/${item.toLowerCase()}`;
+              return (
+                <a
+                  key={index}
+                  href={path}
+                  className="relative font-semibold text-yellow-400 transition hover:text-yellow-300 hover:scale-105"
+                >
+                  {item}
+                  {/* curved underline effect */}
+                  <span className="absolute left-0 -bottom-1 h-0.5 w-full bg-yellow-400 rounded-full scale-x-0 origin-left transition-transform duration-300 ease-out hover:scale-x-100"></span>
+                </a>
+              );
+            })}
+          </div>
+
+          {/* Right: audio + mobile menu button */}
+          <div className="flex items-center gap-4">
             <button
               onClick={toggleAudioIndicator}
-              className="ml-10 flex items-center space-x-1 p-1 rounded bg-yellow-400 hover:bg-yellow-300 border border-yellow-500 shadow transition"
+              className="flex flex-col items-center space-y-0.5 p-1 rounded bg-yellow-400 hover:bg-yellow-300 border border-yellow-500 shadow transition"
             >
               <audio ref={audioElementRef} className="hidden" src="/audio/loop.mp3" loop />
-              {[1, 2, 3, 4].map((bar, index) => (
-                <div
-                  key={index}
-                  className={clsx(
-                    "w-1 rounded-full bg-black transition-transform duration-300 ease-in-out",
-                    { "animate-bounce": isIndicatorActive }
-                  )}
-                  style={{
-                    height: `${6 + bar * 4}px`,
-                    animationDelay: `${index * 0.1}s`,
-                  }}
-                />
-              ))}
+              <div className="flex items-end space-x-0.5">
+                {[1, 2, 3, 4].map((bar, index) => (
+                  <div
+                    key={index}
+                    className={clsx(
+                      "w-1 rounded-full bg-black transition-transform duration-300 ease-in-out",
+                      { "animate-bounce": isIndicatorActive }
+                    )}
+                    style={{
+                      height: `${6 + bar * 4}px`,
+                      animationDelay: `${index * 0.1}s`,
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="text-[10px] text-black font-semibold">Audio</span>
+            </button>
+
+            {/* Mobile menu toggle */}
+            <button onClick={toggleMobileMenu} className="md:hidden text-yellow-400">
+              {mobileMenuOpen ? <HiX size={28} /> : <HiMenu size={28} />}
             </button>
           </div>
         </nav>
+
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="absolute top-16 right-4 bg-black/80 backdrop-blur-md rounded-lg shadow-lg p-4 flex flex-col gap-3 md:hidden">
+            {navItems.map((item, index) => {
+              let path = "/";
+              if (item !== "Home") path = `/${item.toLowerCase()}`;
+              return (
+                <a
+                  key={index}
+                  href={path}
+                  className="font-semibold text-yellow-400 hover:text-yellow-300 transition"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item}
+                </a>
+              );
+            })}
+          </div>
+        )}
       </header>
     </div>
   );

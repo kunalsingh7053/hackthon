@@ -12,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [hasClicked, setHasClicked] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [loadedVideos, setLoadedVideos] = useState(0);
 
@@ -33,26 +34,32 @@ const Hero = () => {
     setCurrentIndex((prevIndex) => (prevIndex % totalVideos) + 1);
   };
 
-  useGSAP(() => {
-    if (hasClicked) {
-      gsap.set("#next-video", { visibility: "visible" });
-      gsap.to("#next-video", {
-        transformOrigin: "center center",
-        scale: 1,
-        width: "100%",
-        height: "100%",
-        duration: 1,
-        ease: "power1.inOut",
-        onStart: () => nextVdRef.current.play(),
-      });
-      gsap.from("#current-video", {
-        transformOrigin: "center center",
-        scale: 0,
-        duration: 1.5,
-        ease: "power1.inOut",
-      });
+  useGSAP(
+    () => {
+      if (hasClicked) {
+        gsap.set("#next-video", { visibility: "visible" });
+        gsap.to("#next-video", {
+          transformOrigin: "center center",
+          scale: 1,
+          width: "100%",
+          height: "100%",
+          duration: 1,
+          ease: "power1.inOut",
+          onStart: () => nextVdRef.current.play(),
+        });
+        gsap.from("#current-video", {
+          transformOrigin: "center center",
+          scale: 0,
+          duration: 1.5,
+          ease: "power1.inOut",
+        });
+      }
+    },
+    {
+      dependencies: [currentIndex],
+      revertOnUpdate: true,
     }
-  }, { dependencies: [currentIndex], revertOnUpdate: true });
+  );
 
   useGSAP(() => {
     gsap.set("#video-frame", {
@@ -70,27 +77,19 @@ const Hero = () => {
         scrub: true,
       },
     });
-  }, []);
+  });
 
-  // 🟡 Update: use CDN URLs instead of local folder
-  const videoUrls = [
-    "https://youthiapa.com/cdn/shop/videos/c/vp/a6fb5e33f9a64302ab7ce3bbf3efa3fb/a6fb5e33f9a64302ab7ce3bbf3efa3fb.HD-1080p-7.2Mbps-49439125.mp4?v=0",
-    "https://youthiapa.com/cdn/shop/videos/c/vp/bec0eef27aa94de99a25cdd97b6a2bdc/bec0eef27aa94de99a25cdd97b6a2bdc.HD-1080p-7.2Mbps-49421806.mp4?v=0",
-    "https://youthiapa.com/cdn/shop/videos/c/vp/6a3572187b2243cda71a45789afec15b/6a3572187b2243cda71a45789afec15b.HD-1080p-7.2Mbps-49421697.mp4?v=0",
-    "https://youthiapa.com/cdn/shop/videos/c/vp/3654e4c7a7bb4367bd215825eede885a/3654e4c7a7bb4367bd215825eede885a.HD-1080p-7.2Mbps-49421692.mp4?v=0"
-  ];
-
-  const getVideoSrc = (index) => videoUrls[index - 1];
+  const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
 
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
       {loading && (
-        <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-black">
-          <img
-            src="https://i.pinimg.com/736x/da/97/96/da979694c6573d9ec50b01644fbe338a.jpg"
-            alt="Loading..."
-            className="w-full h-full object-cover"
-          />
+        <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
+          <div className="three-body">
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+          </div>
         </div>
       )}
 
@@ -128,7 +127,9 @@ const Hero = () => {
             onLoadedData={handleVideoLoad}
           />
           <video
-            src={getVideoSrc(currentIndex === totalVideos - 1 ? 1 : currentIndex)}
+            src={getVideoSrc(
+              currentIndex === totalVideos - 1 ? 1 : currentIndex
+            )}
             autoPlay
             loop
             muted
@@ -137,6 +138,7 @@ const Hero = () => {
           />
         </div>
 
+        {/* 🟡 Updated heading */}
         <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-yellow-400">
           BB <b>Ki</b> Vines
         </h1>
@@ -146,9 +148,11 @@ const Hero = () => {
             <h1 className="special-font hero-heading text-yellow-400">
               Youthiapa
             </h1>
+
             <p className="mb-5 max-w-64 font-robert-regular text-white">
               Laugh. Relate. Repeat.
             </p>
+
             <Button
               id="shop-now"
               title="Shop Now"
