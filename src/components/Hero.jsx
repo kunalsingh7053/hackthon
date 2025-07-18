@@ -72,7 +72,15 @@ const Hero = () => {
     });
   }, []);
 
-  const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
+  // 🟡 Update: use CDN URLs instead of local folder
+  const videoUrls = [
+    "https://youthiapa.com/cdn/shop/videos/c/vp/a6fb5e33f9a64302ab7ce3bbf3efa3fb/a6fb5e33f9a64302ab7ce3bbf3efa3fb.HD-1080p-7.2Mbps-49439125.mp4?v=0",
+    "https://youthiapa.com/cdn/shop/videos/c/vp/bec0eef27aa94de99a25cdd97b6a2bdc/bec0eef27aa94de99a25cdd97b6a2bdc.HD-1080p-7.2Mbps-49421806.mp4?v=0",
+    "https://youthiapa.com/cdn/shop/videos/c/vp/6a3572187b2243cda71a45789afec15b/6a3572187b2243cda71a45789afec15b.HD-1080p-7.2Mbps-49421697.mp4?v=0",
+    "https://youthiapa.com/cdn/shop/videos/c/vp/3654e4c7a7bb4367bd215825eede885a/3654e4c7a7bb4367bd215825eede885a.HD-1080p-7.2Mbps-49421692.mp4?v=0"
+  ];
+
+  const getVideoSrc = (index) => videoUrls[index - 1];
 
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">

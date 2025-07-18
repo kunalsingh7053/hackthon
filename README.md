@@ -2,7 +2,6 @@
 
 A dynamic, animated, and fully responsive website built with React.js, Vite, Tailwind CSS, GSAP, and Framer Motion — inspired by BB Ki Vines, showcasing the youth‑centric brand **Youthiapa**.
 
-![Youthiapa Banner](public/img/logo.png)
 
 ---
 
