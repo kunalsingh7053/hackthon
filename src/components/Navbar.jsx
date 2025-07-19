@@ -14,6 +14,7 @@ const NavBar = () => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const audioElementRef = useRef(null);
+  const navSoundRef = useRef(null); // new ref
   const navContainerRef = useRef(null);
   const { y: currentScrollY } = useWindowScroll();
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -26,7 +27,14 @@ const NavBar = () => {
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
 
-  // ✅ Fix: auto close mobile menu on outside click + prevent hamburger conflict
+  // play nav click sound
+  const handleNavClick = () => {
+    if (navSoundRef.current) {
+      navSoundRef.current.currentTime = 0;
+      navSoundRef.current.play();
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -76,7 +84,7 @@ const NavBar = () => {
     });
   }, [isNavVisible]);
 
-  // ✅ AnimatedText component with GSAP bounce
+  // AnimatedText component with GSAP bounce
   const AnimatedText = ({ text }) => {
     const lettersRef = useRef([]);
 
@@ -121,6 +129,10 @@ const NavBar = () => {
       ref={navContainerRef}
       className="fixed inset-x-0 top-4 z-[200] h-16 border-none transition-all duration-700 sm:inset-x-6"
     >
+      {/* hidden audio elements */}
+      <audio ref={audioElementRef} className="hidden" src="/audio/loop.mp3" loop />
+      <audio ref={navSoundRef} className="hidden" src="/audio/navsound.wav" />
+
       <header className="absolute top-1/2 w-full -translate-y-1/2">
         <nav className="flex size-full items-center justify-between p-4 rounded-xl bg-black/60 backdrop-blur-md shadow-lg">
           {/* Left: logo & shop button */}
@@ -130,15 +142,16 @@ const NavBar = () => {
               alt="logo"
               className="w-10 h-10 rounded-full object-cover"
             />
-          <button
-  id="shop-now"
-  onClick={() => navigate("/products")}
-  className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-thin hidden md:flex items-center justify-center hover:bg-yellow-300 transition"
->
-  <TiShoppingCart />
-  Shop Now
-</button>
-
+            <button
+              onClick={() => {
+                handleNavClick();
+                navigate("/products");
+              }}
+              className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-thin hidden md:flex items-center justify-center hover:bg-yellow-300 transition"
+            >
+              <TiShoppingCart />
+              Shop Now
+            </button>
           </div>
 
           {/* Center: nav items */}
@@ -150,6 +163,7 @@ const NavBar = () => {
                 <NavLink
                   key={index}
                   to={path}
+                  onClick={handleNavClick}
                   className={({ isActive }) =>
                     `relative font-semibold transition hover:text-yellow-300 ${
                       isActive ? "text-yellow-300" : "text-yellow-400"
@@ -178,7 +192,6 @@ const NavBar = () => {
               onClick={toggleAudioIndicator}
               className="flex flex-col items-center space-y-0.5 p-1 rounded bg-yellow-400 hover:bg-yellow-300 border border-yellow-500 shadow transition"
             >
-              <audio ref={audioElementRef} className="hidden" src="/audio/loop.mp3" loop />
               <div className="flex items-end space-x-0.5">
                 {[1, 2, 3, 4].map((bar, index) => (
                   <div
@@ -219,7 +232,10 @@ const NavBar = () => {
                 <NavLink
                   key={index}
                   to={path}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    handleNavClick();
+                    setMobileMenuOpen(false);
+                  }}
                   className={({ isActive }) =>
                     `font-semibold transition ${
                       isActive ? "text-yellow-300" : "text-yellow-400"

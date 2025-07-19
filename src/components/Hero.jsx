@@ -20,6 +20,8 @@ const Hero = () => {
   const totalVideos = 4;
 
   const nextVdRef = useRef(null);
+  const shopTextRef = useRef(null);
+  const cartIconRef = useRef(null);
 
   const handleVideoLoad = () => {
     setLoadedVideos((prev) => prev + 1);
@@ -75,9 +77,33 @@ const Hero = () => {
     });
   }, []);
 
+  // GSAP hover animation for "Shop Now" text and cart icon
+  useEffect(() => {
+    const textEl = shopTextRef.current;
+    const iconEl = cartIconRef.current;
+
+    const handleMouseEnter = () => {
+      gsap.fromTo(
+        textEl,
+        { rotate: 0 },
+        { rotate: 360, duration: 0.6, ease: "power2.inOut" }
+      );
+      gsap.fromTo(
+        iconEl,
+        { rotate: 0 },
+        { rotate: 360, duration: 0.6, ease: "power2.inOut" }
+      );
+    };
+
+    textEl?.addEventListener("mouseenter", handleMouseEnter);
+    return () => {
+      textEl?.removeEventListener("mouseenter", handleMouseEnter);
+    };
+  }, []);
+
   const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
 
-  // AnimatedText: on hover reveal
+  // AnimatedText component for hover reveal
   const AnimatedText = ({ text }) => {
     const lettersRef = useRef([]);
     const handleMouseEnter = () => {
@@ -172,7 +198,6 @@ const Hero = () => {
             <h1 className="special-font hero-heading text-yellow-400">
               <AnimatedText text="Youthiapa" />
             </h1>
-            {/* ✅ replaced with typing effect */}
             <TypingText text="Laugh. Relate. Repeat." />
             <button
               id="shop-now"
@@ -180,7 +205,8 @@ const Hero = () => {
               onClick={() => navigate("/products")}
               className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-bold"
             >
-              Shop Now
+              <span ref={shopTextRef}>Shop Now</span>
+              <TiShoppingCart size={20} ref={cartIconRef} />
             </button>
           </div>
         </div>
