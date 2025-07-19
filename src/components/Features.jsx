@@ -22,7 +22,7 @@ export const BentoTilt = ({ children, className = "" }) => {
   return (
     <div
       ref={itemRef}
-      className={className}
+      className={`${className} overflow-hidden rounded-md`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ transform: transformStyle }}
@@ -32,7 +32,13 @@ export const BentoTilt = ({ children, className = "" }) => {
   );
 };
 
-export const BentoCard = ({ src, title, description, isComingSoon }) => {
+export const BentoCard = ({
+  src,
+  title,
+  description,
+  ctaText = "Coming Soon",
+  isImage = false
+}) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [hoverOpacity, setHoverOpacity] = useState(0);
   const hoverButtonRef = useRef(null);
@@ -47,15 +53,23 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
   };
 
   return (
-    <div className="relative size-full">
-      <video
-        src={src}
-        loop
-        muted
-        autoPlay
-        className="absolute left-0 top-0 size-full object-cover object-center"
-      />
-      <div className="relative z-10 flex size-full flex-col justify-between p-5 text-blue-50">
+    <div className="relative w-full h-full">
+      {isImage ? (
+        <img
+          src={src}
+          alt="bento"
+          className="absolute left-0 top-0 w-full h-full object-cover"
+        />
+      ) : (
+        <video
+          src={src}
+          loop
+          muted
+          autoPlay
+          className="absolute left-0 top-0 w-full h-full object-cover"
+        />
+      )}
+      <div className="relative z-10 flex flex-col justify-between p-5 text-blue-50 h-full">
         <div>
           <h1 className="bento-title special-font">{title}</h1>
           {description && (
@@ -63,34 +77,32 @@ export const BentoCard = ({ src, title, description, isComingSoon }) => {
           )}
         </div>
 
-        {isComingSoon && (
+        <div
+          ref={hoverButtonRef}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setHoverOpacity(1)}
+          onMouseLeave={() => setHoverOpacity(0)}
+          className="border-hsla relative flex w-fit cursor-pointer items-center gap-1 overflow-hidden rounded-full bg-black px-5 py-2 text-xs uppercase text-white"
+        >
           <div
-            ref={hoverButtonRef}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setHoverOpacity(1)}
-            onMouseLeave={() => setHoverOpacity(0)}
-            className="border-hsla relative flex w-fit cursor-pointer items-center gap-1 overflow-hidden rounded-full bg-black px-5 py-2 text-xs uppercase text-white/20"
-          >
-            <div
-              className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
-              style={{
-                opacity: hoverOpacity,
-                background: `radial-gradient(100px circle at ${cursorPosition.x}px ${cursorPosition.y}px, #656fe288, #00000026)`,
-              }}
-            />
-            <TiLocationArrow className="relative z-20" />
-            <p className="relative z-20">coming soon</p>
-          </div>
-        )}
+            className="pointer-events-none absolute -inset-px transition duration-300"
+            style={{
+              opacity: hoverOpacity,
+              background: `radial-gradient(100px circle at ${cursorPosition.x}px ${cursorPosition.y}px, #656fe288, #00000026)`,
+            }}
+          />
+          <TiLocationArrow className="relative z-20" />
+          <p className="relative z-20">{ctaText}</p>
+        </div>
       </div>
     </div>
   );
 };
 
 const Features = () => (
-  <section className="bg-black pb-52">
+  <section className="bg-black pb-32">
     <div className="container mx-auto px-3 md:px-10">
-      <div className="px-5 py-32">
+      <div className="px-5 py-20">
         <p className="font-circular-web text-lg text-blue-50">
           Welcome to the World of <b>Youthiapa</b>
         </p>
@@ -100,60 +112,55 @@ const Features = () => (
         </p>
       </div>
 
-      {/* ✅ Revolutionaries teaser using local video */}
-      <BentoTilt className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
+      {/* Revolutionaries teaser */}
+      <BentoTilt className="border-hsla relative mb-10 w-full h-96 md:h-[75vh]">
         <BentoCard
           src="videos/The Revolutionaries.mp4"
           title={<>The <b>Revolutionaries</b></>}
           description="Bhuvan Bam stars in an epic tale of India’s freedom struggle. Coming soon on Prime Video."
-          isComingSoon
+          ctaText="Coming Soon"
         />
       </BentoTilt>
 
-      <div className="grid h-[135vh] w-full grid-cols-2 grid-rows-3 gap-7">
-        <BentoTilt className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2">
+      {/* Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
+        {/* Top row */}
+        <BentoTilt className="h-[90vh]">
           <BentoCard
-            src="videos/feature-2.mp4"
-            title={<>Meme<b>baaz</b></>}
-            description="Scroll, share, and LOL at the hottest BB-approved memes."
-            isComingSoon
+            src="img/t-1.webp"
+            title={<>T-<b>Shirts</b> Drop</>}
+            description="Style that speak memes!"
+            ctaText="Explore Now"
+            isImage
           />
         </BentoTilt>
 
-        <BentoTilt className="bento-tilt_1 row-span-1 ms-32 md:col-span-1 md:ms-0">
+        <BentoTilt className="h-[90vh]">
           <BentoCard
-            src="videos/feature-3.mp4"
-            title={<>R<b>o</b>ast Room</>}
-            description="A savage corner to comment, react, and roast — Youthiapa style."
-            isComingSoon
+            src="videos/hoodie.mp4"
+            title={<>H<b>oodies</b> Drop</>}
+            description="Cozy up in style with BB Ki Vines hoodies!"
+            ctaText="Coming Soon"
           />
         </BentoTilt>
 
-        <BentoTilt className="bento-tilt_1 me-14 md:col-span-1 md:me-0">
+        {/* Bottom row */}
+        <BentoTilt className="h-[90vh]">
           <BentoCard
-            src="videos/feature-4.mp4"
-            title={<>Merch<b>Vault</b></>}
-            description="Explore exclusive tees, hoodies & drops from BB Ki Vines."
-            isComingSoon
+            src="videos/t-shirt.mp4"
+            title={<>T-<b>Shirts</b> Showcase</>}
+            description="Discover our latest tee collection in motion – style meets attitude!"
+            ctaText="Coming Soon"
           />
         </BentoTilt>
 
-        <BentoTilt className="bento-tilt_2">
-          <div className="flex size-full flex-col justify-between bg-violet-300 p-5">
-            <h1 className="bento-title special-font max-w-64 text-black">
-              Even m<b>o</b>re Youthiapa magic c<b>o</b>ming soon.
-            </h1>
-            <TiLocationArrow className="m-5 scale-[5] self-end" />
-          </div>
-        </BentoTilt>
-
-        <BentoTilt className="bento-tilt_2">
-          <video
-            src="videos/feature-5.mp4"
-            loop
-            muted
-            autoPlay
-            className="size-full object-cover object-center"
+        <BentoTilt className="h-[90vh]">
+          <BentoCard
+            src="img/h-1.webp"
+            title={<>Style<b>Statement</b></>}
+            description="Sleek, fearless and iconic — discover the new drop inspired by bold individuality."
+            ctaText="Explore Now"
+            isImage
           />
         </BentoTilt>
       </div>

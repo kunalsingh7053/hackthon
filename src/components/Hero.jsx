@@ -79,25 +79,55 @@ const Hero = () => {
 
   // GSAP hover animation for "Shop Now" text and cart icon
   useEffect(() => {
+    const btn = document.getElementById("shop-now");
     const textEl = shopTextRef.current;
     const iconEl = cartIconRef.current;
 
     const handleMouseEnter = () => {
-      gsap.fromTo(
-        textEl,
-        { rotate: 0 },
-        { rotate: 360, duration: 0.6, ease: "power2.inOut" }
-      );
-      gsap.fromTo(
-        iconEl,
-        { rotate: 0 },
-        { rotate: 360, duration: 0.6, ease: "power2.inOut" }
-      );
+      const tl = gsap.timeline();
+
+      tl.to(textEl, {
+        rotate: 10,
+        scale: 1.2,
+        color: "#000000",
+        duration: 0.2,
+        ease: "power2.out",
+      })
+      .to(textEl, {
+        rotate: -10,
+        duration: 0.2,
+        ease: "power2.out",
+      })
+      .to(textEl, {
+        rotate: 0,
+        scale: 1,
+        duration: 0.2,
+        ease: "power2.out",
+      }, "<"); // "<" means start at same time
+
+      tl.to(iconEl, {
+        rotate: 360,
+        scale: 1.4,
+        duration: 0.5,
+        ease: "bounce.out",
+      }, 0); // start together
     };
 
-    textEl?.addEventListener("mouseenter", handleMouseEnter);
+    const handleMouseLeave = () => {
+      gsap.to([textEl, iconEl], {
+        rotate: 0,
+        scale: 1,
+        duration: 0.3,
+        ease: "power2.inOut",
+      });
+    };
+
+    btn?.addEventListener("mouseenter", handleMouseEnter);
+    btn?.addEventListener("mouseleave", handleMouseLeave);
+
     return () => {
-      textEl?.removeEventListener("mouseenter", handleMouseEnter);
+      btn?.removeEventListener("mouseenter", handleMouseEnter);
+      btn?.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 

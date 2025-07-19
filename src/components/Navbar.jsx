@@ -14,8 +14,9 @@ const NavBar = () => {
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const audioElementRef = useRef(null);
-  const navSoundRef = useRef(null); // new ref
+  const navSoundRef = useRef(null);
   const navContainerRef = useRef(null);
+  const shopBtnRef = useRef(null); // 🪄 new ref for shop button
   const { y: currentScrollY } = useWindowScroll();
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -27,7 +28,6 @@ const NavBar = () => {
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
 
-  // play nav click sound
   const handleNavClick = () => {
     if (navSoundRef.current) {
       navSoundRef.current.currentTime = 0;
@@ -84,7 +84,69 @@ const NavBar = () => {
     });
   }, [isNavVisible]);
 
-  // AnimatedText component with GSAP bounce
+  // 🪄 Logo hover animation
+  useEffect(() => {
+    const logo = document.querySelector(".logo-img");
+
+    const handleMouseEnter = () => {
+      gsap.to(logo, {
+        scale: 1.1,
+        rotate: 10,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(logo, {
+        scale: 1,
+        rotate: 0,
+        duration: 0.3,
+        ease: "power2.inOut",
+      });
+    };
+
+    logo?.addEventListener("mouseenter", handleMouseEnter);
+    logo?.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      logo?.removeEventListener("mouseenter", handleMouseEnter);
+      logo?.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
+  // 🪄 Shop button hover animation
+  useEffect(() => {
+    const btn = shopBtnRef.current;
+
+    const handleMouseEnter = () => {
+      gsap.to(btn, {
+        scale: 1.1,
+        rotate: -5,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(btn, {
+        scale: 1,
+        rotate: 0,
+        duration: 0.3,
+        ease: "power2.inOut",
+      });
+    };
+
+    btn?.addEventListener("mouseenter", handleMouseEnter);
+    btn?.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      btn?.removeEventListener("mouseenter", handleMouseEnter);
+      btn?.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
+  // AnimatedText component
   const AnimatedText = ({ text }) => {
     const lettersRef = useRef([]);
 
@@ -140,9 +202,10 @@ const NavBar = () => {
             <img
               src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg"
               alt="logo"
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover logo-img"
             />
             <button
+              ref={shopBtnRef} // 🪄 add ref
               onClick={() => {
                 handleNavClick();
                 navigate("/products");
