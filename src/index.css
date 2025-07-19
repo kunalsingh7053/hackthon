@@ -271,3 +271,6 @@ body {
     opacity: 0.8;
   }
 }
+button:active{
+  scale:0.9;
+}

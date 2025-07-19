@@ -4,12 +4,12 @@ import gsap from "gsap";
 import { useWindowScroll } from "react-use";
 import { TiShoppingCart } from "react-icons/ti";
 import { HiMenu, HiX } from "react-icons/hi";
-import { NavLink } from "react-router-dom";   // ✅ just import
-import Button from "./Button";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const navItems = ["Home", "Products", "About", "Cart", "Login"];
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,6 +25,23 @@ const NavBar = () => {
   };
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
+
+  // ✅ Fix: auto close mobile menu on outside click + prevent hamburger conflict
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        mobileMenuOpen &&
+        navContainerRef.current &&
+        !navContainerRef.current.contains(e.target)
+      ) {
+        setMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     if (isAudioPlaying) {
@@ -59,6 +76,46 @@ const NavBar = () => {
     });
   }, [isNavVisible]);
 
+  // ✅ AnimatedText component with GSAP bounce
+  const AnimatedText = ({ text }) => {
+    const lettersRef = useRef([]);
+
+    const handleMouseEnter = () => {
+      gsap.fromTo(
+        lettersRef.current,
+        { y: 0 },
+        { y: -6, duration: 0.3, ease: "power2.out", stagger: 0.03 }
+      );
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(lettersRef.current, {
+        y: 0,
+        duration: 0.3,
+        ease: "power2.out",
+        stagger: 0.03,
+      });
+    };
+
+    return (
+      <div
+        className="inline-flex overflow-hidden cursor-pointer"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {text.split("").map((letter, index) => (
+          <span
+            key={index}
+            ref={(el) => (lettersRef.current[index] = el)}
+            className="inline-block"
+          >
+            {letter}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div
       ref={navContainerRef}
@@ -66,21 +123,25 @@ const NavBar = () => {
     >
       <header className="absolute top-1/2 w-full -translate-y-1/2">
         <nav className="flex size-full items-center justify-between p-4 rounded-xl bg-black/60 backdrop-blur-md shadow-lg">
+          {/* Left: logo & shop button */}
           <div className="flex items-center gap-4">
             <img
               src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg"
               alt="logo"
               className="w-10 h-10 rounded-full object-cover"
             />
-            <Button
-              id="shop-button"
-              title="Shop"
-              rightIcon={<TiShoppingCart />}
-              containerClass="bg-yellow-400 text-black hidden md:flex items-center justify-center gap-1 hover:bg-yellow-300 transition"
-            />
+          <button
+  id="shop-now"
+  onClick={() => navigate("/products")}
+  className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-thin hidden md:flex items-center justify-center hover:bg-yellow-300 transition"
+>
+  <TiShoppingCart />
+  Shop Now
+</button>
+
           </div>
 
-          {/* ✅ Center: nav items with NavLink */}
+          {/* Center: nav items */}
           <div className="hidden md:flex gap-6">
             {navItems.map((item, index) => {
               let path = "/";
@@ -90,19 +151,28 @@ const NavBar = () => {
                   key={index}
                   to={path}
                   className={({ isActive }) =>
-                    `relative font-semibold transition hover:text-yellow-300 hover:scale-105 ${
+                    `relative font-semibold transition hover:text-yellow-300 ${
                       isActive ? "text-yellow-300" : "text-yellow-400"
                     }`
                   }
                 >
-                  {item}
-                  <span className="absolute left-0 -bottom-1 h-0.5 w-full bg-yellow-400 rounded-full scale-x-0 origin-left transition-transform duration-300 ease-out hover:scale-x-100"></span>
+                  {({ isActive }) => (
+                    <>
+                      <AnimatedText text={item} />
+                      <span
+                        className={clsx(
+                          "absolute left-0 -bottom-1 h-0.5 w-full bg-yellow-400 rounded-full origin-left transition-transform duration-300 ease-out",
+                          isActive ? "scale-x-100" : "scale-x-0 hover:scale-x-100"
+                        )}
+                      ></span>
+                    </>
+                  )}
                 </NavLink>
               );
             })}
           </div>
 
-          {/* Right: audio + mobile menu */}
+          {/* Right: audio + mobile toggle */}
           <div className="flex items-center gap-4">
             <button
               onClick={toggleAudioIndicator}
@@ -127,13 +197,19 @@ const NavBar = () => {
               <span className="text-[10px] text-black font-semibold">Audio</span>
             </button>
 
-            <button onClick={toggleMobileMenu} className="md:hidden text-yellow-400">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMobileMenu();
+              }}
+              className="md:hidden text-yellow-400"
+            >
               {mobileMenuOpen ? <HiX size={28} /> : <HiMenu size={28} />}
             </button>
           </div>
         </nav>
 
-        {/* ✅ Mobile menu also with NavLink */}
+        {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="absolute top-16 right-4 bg-black/80 backdrop-blur-md rounded-lg shadow-lg p-4 flex flex-col gap-3 md:hidden">
             {navItems.map((item, index) => {
