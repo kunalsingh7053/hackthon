@@ -1,3 +1,4 @@
+// src/components/Loader.jsx
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
@@ -12,7 +13,6 @@ const Loader = ({ setShowLoader }) => {
   ];
 
   useEffect(() => {
-    // Start slideshow
     let i = 0;
     const interval = setInterval(() => {
       setCurrentIndex(i % images.length);
@@ -27,7 +27,7 @@ const Loader = ({ setShowLoader }) => {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, []);
+  }, [setShowLoader]);
 
   const textAnim = {
     hidden: { y: "100%", opacity: 0 },
