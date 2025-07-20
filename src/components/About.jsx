@@ -1,7 +1,6 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
-import { useEffect } from "react";
 
 import AnimatedTitle from "./AnimatedTitle";
 
@@ -9,8 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   useGSAP(() => {
-    // Create timeline
-    const clipAnimation = gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#clip",
         start: "center center",
@@ -18,21 +16,22 @@ const About = () => {
         scrub: 0.5,
         pin: true,
         pinSpacing: true,
+        // Force low z-index when pinned so it stays under hero
+        onEnter: () => gsap.set("#clip", { zIndex: 10 }),
+        onLeave: () => gsap.set("#clip", { zIndex: 0 }),
+        onEnterBack: () => gsap.set("#clip", { zIndex: 10 }),
+        onLeaveBack: () => gsap.set("#clip", { zIndex: 0 }),
       },
     });
 
-    clipAnimation.to(".mask-clip-path", {
+    tl.to(".mask-clip-path", {
       width: "100vw",
       height: "100vh",
       borderRadius: 0,
     });
 
-    // Refresh ScrollTrigger on mount
-    ScrollTrigger.refresh();
-
-    // Cleanup on unmount
     return () => {
-      clipAnimation.kill();
+      tl.kill();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
@@ -43,12 +42,10 @@ const About = () => {
         <p className="font-general text-sm uppercase text-yellow-400 md:text-[10px]">
           Welcome to Youthiapa
         </p>
-
         <AnimatedTitle
           title="Bhuvan Bam's <br /> Official Merch Brand"
           containerClass="mt-5 text-center !text-yellow-400"
         />
-
         <div className="about-subtext text-center px-4 max-w-2xl">
           <p className="text-white">
             The comedy you love, now wearable. Created by Bhuvan Bam for fans everywhere.
@@ -59,8 +56,8 @@ const About = () => {
         </div>
       </div>
 
-      <div className="h-dvh w-screen" id="clip">
-        <div className="mask-clip-path about-image relative size-full overflow-hidden rounded-[20%]">
+      <div id="clip" className="h-dvh w-screen z-10 relative">
+        <div className="mask-clip-path about-image relative size-full overflow-hidden rounded-[20%] z-10">
           <img
             src="img/about.webp"
             alt="Background"
