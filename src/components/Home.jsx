@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useRef, useState, useEffect } from 'react';
 import Hero from '../components/Hero';
+import Marquee from './Marquee';
 
 // Lazy load components
 const About = lazy(() => import('../components/About'));
@@ -52,6 +53,7 @@ const Home = () => {
       </div>
 
       <Suspense fallback={<div className="text-center my-10 text-yellow-400">Loading...</div>}>
+      <Marquee/>
         <About />
         <Features />
         <Story />

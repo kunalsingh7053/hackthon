@@ -1,14 +1,20 @@
-@import url("https://fonts.cdnfonts.com/css/general-sans");
+/* @import url("https://fonts.cdnfonts.com/css/general-sans"); */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+
+
+
 body {
   width: 100dvw;
   overflow-x: hidden;
   background-color: #dfdff0;
-  font-family: "General Sans", sans-serif;
+  font-family: 'Manrope', sans-serif;
+  /* font-family: "General Sans", sans-serif; */
 }
 
 @layer base {
@@ -287,4 +293,31 @@ html {
 /* Optional: prevent horizontal scroll */
 body {
   overflow-x: hidden;
+}
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-100px) translateX(20px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-200px) translateX(0);
+    opacity: 0;
+  }
+}
+
+.slow-spin {
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

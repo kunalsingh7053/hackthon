@@ -42,10 +42,10 @@ const About = () => {
         <p className="font-general text-sm uppercase text-yellow-400 md:text-[10px]">
           Welcome to Youthiapa
         </p>
-        <AnimatedTitle
-          title="Bhuvan Bam's <br /> Official Merch Brand"
-          containerClass="mt-5 text-center !text-yellow-400"
-        />
+      <AnimatedTitle
+  title="Bhuvan Bam's <br /> Official Merch Brand"
+ containerClass="mt-5 text-center !text-yellow-400 font-semibold tracking-wider leading-tight"
+/>
         <div className="about-subtext text-center px-4 max-w-2xl">
           <p className="text-white">
             The comedy you love, now wearable. Created by Bhuvan Bam for fans everywhere.
