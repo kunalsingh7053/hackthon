@@ -4,7 +4,7 @@ import Loader from "./components/Loader";
 import NavBar from "./components/Navbar";
 import Mainroute from "./routes/Mainroute";
 import Lenis from '@studio-freight/lenis';
-import JellyCursor from "./components/JellyCursor";
+import JellyCursor from "./components/JellyCursor";  // ⭐ import jelly cursor
 
 function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -12,10 +12,10 @@ function App() {
   useEffect(() => {
     if (!showLoader) {
       const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smooth: true,
-        smoothTouch: false,
+        duration: 1.2,       // smooth speed (default 1.2)
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // custom easing
+        smooth: true,       
+        smoothTouch: false, 
       });
 
       function raf(time) {
@@ -25,7 +25,9 @@ function App() {
 
       requestAnimationFrame(raf);
 
-      return () => lenis.destroy();
+      return () => {
+        lenis.destroy(); 
+      };
     }
   }, [showLoader]);
 
@@ -35,9 +37,9 @@ function App() {
         {showLoader && <Loader setShowLoader={setShowLoader} />}
         {!showLoader && (
           <>
-            <JellyCursor /> {/* 👈 yahi pe add karo */}
+            <JellyCursor />   {/* ⭐ add here so it’s always on */}
             <NavBar />
-            <Mainroute />
+            <Mainroute />    {/* Saare route yaha render honge */}
           </>
         )}
       </main>

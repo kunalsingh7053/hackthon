@@ -4,19 +4,21 @@ import gsap from "gsap";
 import { useWindowScroll } from "react-use";
 import { TiShoppingCart } from "react-icons/ti";
 import { HiMenu, HiX } from "react-icons/hi";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 const navItems = ["Home", "Products", "About", "Cart", "Login"];
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ get current route
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [isIndicatorActive, setIsIndicatorActive] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const audioElementRef = useRef(null);
   const navSoundRef = useRef(null);
   const navContainerRef = useRef(null);
-  const shopBtnRef = useRef(null); // 🪄 new ref for shop button
+  const shopBtnRef = useRef(null);
+  const circleRef = useRef(null);
   const { y: currentScrollY } = useWindowScroll();
   const [isNavVisible, setIsNavVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -28,35 +30,49 @@ const NavBar = () => {
 
   const toggleMobileMenu = () => setMobileMenuOpen((prev) => !prev);
 
-  const handleNavClick = () => {
+  const handleNavClick = (path) => {
+    if (path === location.pathname) return; // ✅ do nothing if same page
+
     if (navSoundRef.current) {
       navSoundRef.current.currentTime = 0;
       navSoundRef.current.play();
     }
+
+    gsap.fromTo(
+      circleRef.current,
+      { scale: 0, opacity: 1 },
+      {
+        scale: 20,
+        duration: 0.6,
+        ease: "power2.inOut",
+        onComplete: () => {
+          navigate(path);
+          gsap.to(circleRef.current, {
+            opacity: 0,
+            duration: 0.3,
+            onComplete: () => {
+              gsap.set(circleRef.current, { scale: 0 });
+            }
+          });
+        }
+      }
+    );
   };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        mobileMenuOpen &&
-        navContainerRef.current &&
-        !navContainerRef.current.contains(e.target)
-      ) {
+      if (mobileMenuOpen && navContainerRef.current && !navContainerRef.current.contains(e.target)) {
         setMobileMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mobileMenuOpen]);
 
   useEffect(() => {
     if (isAudioPlaying) {
       audioElementRef.current.muted = false;
-      audioElementRef.current.play().catch((error) => {
-        console.log("Autoplay blocked until user interacts:", error);
-      });
+      audioElementRef.current.play().catch((error) => console.log("Autoplay blocked:", error));
     } else {
       audioElementRef.current.pause();
     }
@@ -84,164 +100,87 @@ const NavBar = () => {
     });
   }, [isNavVisible]);
 
-  // 🪄 Logo hover animation
   useEffect(() => {
     const logo = document.querySelector(".logo-img");
-
-    const handleMouseEnter = () => {
-      gsap.to(logo, {
-        scale: 1.1,
-        rotate: 10,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(logo, {
-        scale: 1,
-        rotate: 0,
-        duration: 0.3,
-        ease: "power2.inOut",
-      });
-    };
-
-    logo?.addEventListener("mouseenter", handleMouseEnter);
-    logo?.addEventListener("mouseleave", handleMouseLeave);
-
+    if (!logo) return;
+    const enter = () => gsap.to(logo, { scale: 1.1, rotate: 10, duration: 0.3 });
+    const leave = () => gsap.to(logo, { scale: 1, rotate: 0, duration: 0.3 });
+    logo.addEventListener("mouseenter", enter);
+    logo.addEventListener("mouseleave", leave);
     return () => {
-      logo?.removeEventListener("mouseenter", handleMouseEnter);
-      logo?.removeEventListener("mouseleave", handleMouseLeave);
+      logo.removeEventListener("mouseenter", enter);
+      logo.removeEventListener("mouseleave", leave);
     };
   }, []);
 
-  // 🪄 Shop button hover animation
   useEffect(() => {
     const btn = shopBtnRef.current;
-
-    const handleMouseEnter = () => {
-      gsap.to(btn, {
-        scale: 1.1,
-        rotate: -5,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(btn, {
-        scale: 1,
-        rotate: 0,
-        duration: 0.3,
-        ease: "power2.inOut",
-      });
-    };
-
-    btn?.addEventListener("mouseenter", handleMouseEnter);
-    btn?.addEventListener("mouseleave", handleMouseLeave);
-
+    if (!btn) return;
+    const enter = () => gsap.to(btn, { scale: 1.1, rotate: -5, duration: 0.3 });
+    const leave = () => gsap.to(btn, { scale: 1, rotate: 0, duration: 0.3 });
+    btn.addEventListener("mouseenter", enter);
+    btn.addEventListener("mouseleave", leave);
     return () => {
-      btn?.removeEventListener("mouseenter", handleMouseEnter);
-      btn?.removeEventListener("mouseleave", handleMouseLeave);
+      btn.removeEventListener("mouseenter", enter);
+      btn.removeEventListener("mouseleave", leave);
     };
   }, []);
 
-  // AnimatedText component
   const AnimatedText = ({ text }) => {
     const lettersRef = useRef([]);
-
-    const handleMouseEnter = () => {
-      gsap.fromTo(
-        lettersRef.current,
-        { y: 0 },
-        { y: -6, duration: 0.3, ease: "power2.out", stagger: 0.03 }
-      );
-    };
-
-    const handleMouseLeave = () => {
-      gsap.to(lettersRef.current, {
-        y: 0,
-        duration: 0.3,
-        ease: "power2.out",
-        stagger: 0.03,
-      });
-    };
-
+    const enter = () =>
+      gsap.fromTo(lettersRef.current, { y: 0 }, { y: -6, duration: 0.3, stagger: 0.03 });
+    const leave = () =>
+      gsap.to(lettersRef.current, { y: 0, duration: 0.3, stagger: 0.03 });
     return (
-      <div
-        className="inline-flex overflow-hidden cursor-pointer"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {text.split("").map((letter, index) => (
-          <span
-            key={index}
-            ref={(el) => (lettersRef.current[index] = el)}
-            className="inline-block"
-          >
-            {letter}
-          </span>
+      <div className="inline-flex overflow-hidden cursor-pointer" onMouseEnter={enter} onMouseLeave={leave}>
+        {text.split("").map((l, i) => (
+          <span key={i} ref={(el) => (lettersRef.current[i] = el)} className="inline-block">{l}</span>
         ))}
       </div>
     );
   };
 
   return (
-    <div
-      ref={navContainerRef}
-      className="fixed inset-x-0 top-4 z-[200] h-16 border-none transition-all duration-700 sm:inset-x-6"
-    >
-      {/* hidden audio elements */}
+    <div ref={navContainerRef} className="fixed inset-x-0 top-4 z-[200] h-16 sm:inset-x-6 transition-all">
+      {/* hidden audio */}
       <audio ref={audioElementRef} className="hidden" src="/audio/loop.mp3" loop />
       <audio ref={navSoundRef} className="hidden" src="/audio/navsound.wav" />
 
       <header className="absolute top-1/2 w-full -translate-y-1/2">
-        <nav className="flex size-full items-center justify-between p-4 rounded-xl bg-black/60 backdrop-blur-md shadow-lg">
-          {/* Left: logo & shop button */}
+        <nav className="flex items-center justify-between p-4 bg-black/60 rounded-xl backdrop-blur-md shadow-lg">
+          {/* Left: logo + shop btn */}
           <div className="flex items-center gap-4">
-            <img
-              src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg"
-              alt="logo"
-              className="w-10 h-10 rounded-full object-cover logo-img"
-            />
+            <img src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg" alt="logo" className="w-10 h-10 rounded-full object-cover logo-img" />
             <button
-              ref={shopBtnRef} // 🪄 add ref
-              onClick={() => {
-                handleNavClick();
-                navigate("/products");
-              }}
-              className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-thin hidden md:flex items-center justify-center hover:bg-yellow-300 transition"
+              ref={shopBtnRef}
+              onClick={(e) => { e.preventDefault(); handleNavClick("/products"); }}
+              className="hidden md:flex items-center gap-1 bg-yellow-400 text-black p-2 rounded hover:bg-yellow-300"
             >
-              <TiShoppingCart />
-              Shop Now
+              <TiShoppingCart /> Shop Now
             </button>
           </div>
 
-          {/* Center: nav items */}
+          {/* Center: nav */}
           <div className="hidden md:flex gap-6">
-            {navItems.map((item, index) => {
-              let path = "/";
-              if (item !== "Home") path = `/${item.toLowerCase()}`;
+            {navItems.map((item, i) => {
+              const path = item === "Home" ? "/" : `/${item.toLowerCase()}`;
               return (
                 <NavLink
-                  key={index}
+                  key={i}
                   to={path}
-                  onClick={handleNavClick}
+                  onClick={(e) => { e.preventDefault(); handleNavClick(path); }}
                   className={({ isActive }) =>
-                    `relative font-semibold transition hover:text-yellow-300 ${
-                      isActive ? "text-yellow-300" : "text-yellow-400"
-                    }`
+                    `relative font-semibold hover:text-yellow-300 transition ${isActive ? "text-yellow-300" : "text-yellow-400"}`
                   }
                 >
                   {({ isActive }) => (
                     <>
                       <AnimatedText text={item} />
-                      <span
-                        className={clsx(
-                          "absolute left-0 -bottom-1 h-0.5 w-full bg-yellow-400 rounded-full origin-left transition-transform duration-300 ease-out",
-                          isActive ? "scale-x-100" : "scale-x-0 hover:scale-x-100"
-                        )}
-                      ></span>
+                      <span className={clsx(
+                        "absolute left-0 -bottom-1 h-0.5 w-full bg-yellow-400 rounded-full origin-left transition-transform duration-300",
+                        isActive ? "scale-x-100" : "scale-x-0 hover:scale-x-100"
+                      )}></span>
                     </>
                   )}
                 </NavLink>
@@ -249,60 +188,37 @@ const NavBar = () => {
             })}
           </div>
 
-          {/* Right: audio + mobile toggle */}
+          {/* Right: audio & mobile toggle */}
           <div className="flex items-center gap-4">
             <button
               onClick={toggleAudioIndicator}
-              className="flex flex-col items-center space-y-0.5 p-1 rounded bg-yellow-400 hover:bg-yellow-300 border border-yellow-500 shadow transition"
+              className="flex flex-col items-center space-y-0.5 p-1 bg-yellow-400 hover:bg-yellow-300 rounded border border-yellow-500 shadow"
             >
               <div className="flex items-end space-x-0.5">
-                {[1, 2, 3, 4].map((bar, index) => (
-                  <div
-                    key={index}
-                    className={clsx(
-                      "w-1 rounded-full bg-black transition-transform duration-300 ease-in-out",
-                      { "animate-bounce": isIndicatorActive }
-                    )}
-                    style={{
-                      height: `${6 + bar * 4}px`,
-                      animationDelay: `${index * 0.1}s`,
-                    }}
-                  />
+                {[1,2,3,4].map((bar, idx) => (
+                  <div key={idx} className={clsx("w-1 rounded-full bg-black", { "animate-bounce": isIndicatorActive })} style={{ height: `${6 + bar * 4}px`, animationDelay: `${idx * 0.1}s` }} />
                 ))}
               </div>
               <span className="text-[10px] text-black font-semibold">Audio</span>
             </button>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleMobileMenu();
-              }}
-              className="md:hidden text-yellow-400"
-            >
+            <button onClick={(e) => { e.stopPropagation(); toggleMobileMenu(); }} className="md:hidden text-yellow-400">
               {mobileMenuOpen ? <HiX size={28} /> : <HiMenu size={28} />}
             </button>
           </div>
         </nav>
 
-        {/* Mobile menu */}
+        {/* mobile menu */}
         {mobileMenuOpen && (
           <div className="absolute top-16 right-4 bg-black/80 backdrop-blur-md rounded-lg shadow-lg p-4 flex flex-col gap-3 md:hidden">
-            {navItems.map((item, index) => {
-              let path = "/";
-              if (item !== "Home") path = `/${item.toLowerCase()}`;
+            {navItems.map((item, i) => {
+              const path = item === "Home" ? "/" : `/${item.toLowerCase()}`;
               return (
                 <NavLink
-                  key={index}
+                  key={i}
                   to={path}
-                  onClick={() => {
-                    handleNavClick();
-                    setMobileMenuOpen(false);
-                  }}
+                  onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); handleNavClick(path); }}
                   className={({ isActive }) =>
-                    `font-semibold transition ${
-                      isActive ? "text-yellow-300" : "text-yellow-400"
-                    } hover:text-yellow-300`
+                    `font-semibold ${isActive ? "text-yellow-300" : "text-yellow-400"} hover:text-yellow-300`
                   }
                 >
                   {item}
@@ -312,6 +228,9 @@ const NavBar = () => {
           </div>
         )}
       </header>
+
+      {/* black circle */}
+      <div ref={circleRef} className="fixed bottom-[-100px] left-1/2 z-[500] size-[200px] rounded-full bg-black opacity-0 pointer-events-none" style={{ transform: "translateX(-50%) scale(0)" }}></div>
     </div>
   );
 };

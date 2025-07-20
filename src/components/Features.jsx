@@ -104,7 +104,7 @@ const Features = () => (
     <div className="container mx-auto px-3 md:px-10">
       {/* Text + teaser wrapper */}
       <div className="px-5 py-20">
-        <p className="font-circular-web text-lg text-blue-50 mb-4 md:mb-5">
+        <p className="font-circular-web text-lg text-blue-50 mb-4 md:mb-5 mt-5">
           Welcome to the World of <b>Youthiapa</b>
         </p>
         <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50 mb-8 md:mb-10">
