@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
+import { useEffect } from "react";
 
 import AnimatedTitle from "./AnimatedTitle";
 
@@ -8,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   useGSAP(() => {
+    // Create timeline
     const clipAnimation = gsap.timeline({
       scrollTrigger: {
         trigger: "#clip",
@@ -24,6 +26,15 @@ const About = () => {
       height: "100vh",
       borderRadius: 0,
     });
+
+    // Refresh ScrollTrigger on mount
+    ScrollTrigger.refresh();
+
+    // Cleanup on unmount
+    return () => {
+      clipAnimation.kill();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   return (
