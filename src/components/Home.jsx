@@ -9,29 +9,68 @@ const Contact = lazy(() => import('../components/Contact'));
 const Footer = lazy(() => import('../components/Footer'));
 
 const Home = () => {
-  const audioRef = useRef(null);
-  const [atTop, setAtTop] = useState(true); // initially user is at top
+  const scrollAudioRef = useRef(null);
+  const buttonAudioRef = useRef(null);
+  const [atTop, setAtTop] = useState(true);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
-  // handle scroll position to update button icon
+  // unlock both audios on first gesture
+  useEffect(() => {
+    const unlock = () => {
+      [scrollAudioRef, buttonAudioRef].forEach(ref => {
+        if (ref.current) {
+          ref.current.muted = true;
+          ref.current.play().then(() => {
+            ref.current.muted = false;
+          }).catch(e => console.log('Unlock failed:', e));
+        }
+      });
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+    window.addEventListener('click', unlock);
+    window.addEventListener('keydown', unlock);
+    return () => {
+      window.removeEventListener('click', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+  }, []);
+
+  // Scroll listener: play sound once per scroll start
   useEffect(() => {
     const handleScroll = () => {
-      setAtTop(window.scrollY < 100); // adjust 100 if needed
+      setAtTop(window.scrollY < 100);
+
+      if (!isScrollingRef.current) {
+        isScrollingRef.current = true;
+        if (scrollAudioRef.current) {
+          scrollAudioRef.current.currentTime = 0;
+          scrollAudioRef.current.play().catch(e => console.log('Scroll play failed:', e));
+        }
+      }
+
+      clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 200); // after 200ms of no scroll, reset
     };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeoutRef.current);
+    };
   }, []);
 
   const handleButtonClick = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
+    if (buttonAudioRef.current) {
+      buttonAudioRef.current.currentTime = 0;
+      buttonAudioRef.current.play().catch(e => console.log('Button play failed:', e));
     }
-
     if (atTop) {
-      // scroll to bottom
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     } else {
-      // scroll to top
       const heroSection = document.getElementById('hero');
       if (heroSection) {
         heroSection.scrollIntoView({ behavior: 'smooth' });
@@ -43,10 +82,10 @@ const Home = () => {
 
   return (
     <>
-      {/* Hidden audio element */}
-      <audio ref={audioRef} src="/audio/top.wav" preload="auto" />
+      {/* Hidden audio elements */}
+      <audio ref={scrollAudioRef} src="/audio/scroll.wav" preload="auto" />
+      <audio ref={buttonAudioRef} src="/audio/top.wav" preload="auto" />
 
-      {/* Hero section wrapped in a div with id="hero" */}
       <div id="hero">
         <Hero />
       </div>
@@ -59,10 +98,9 @@ const Home = () => {
         <Footer />
       </Suspense>
 
-      {/* Fixed button in bottom-right corner */}
       <button
         onClick={handleButtonClick}
-        className="fixed bottom-5 right-5 z-50 bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full hover:bg-yellow-300 transition shadow-lg"
+        className="fixed bottom-5 right-5 z-50 bg-yellow-400 text-black font-semibold px-4 py-2 rounded-full hover:bg-yellow-300 active:scale-95 transition transform shadow-lg"
         title={atTop ? "Scroll to Bottom" : "Scroll to Top"}
       >
         {atTop ? '⬇' : '⬆'}

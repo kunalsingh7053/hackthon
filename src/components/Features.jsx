@@ -102,29 +102,29 @@ export const BentoCard = ({
 const Features = () => (
   <section className="bg-black pb-32">
     <div className="container mx-auto px-3 md:px-10">
+      {/* Text + teaser wrapper */}
       <div className="px-5 py-20">
-        <p className="font-circular-web text-lg text-blue-50">
+        <p className="font-circular-web text-lg text-blue-50 mb-4 md:mb-5">
           Welcome to the World of <b>Youthiapa</b>
         </p>
-        <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50">
+        <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50 mb-8 md:mb-10">
           Laugh harder. Shop smarter. Dive into BB Ki Vines’ official universe of memes,
           merch, and madness.
         </p>
+
+        {/* Teaser video: always below text */}
+        <BentoTilt className="border-hsla relative w-full h-96 md:h-[75vh]">
+          <BentoCard
+            src="videos/The Revolutionaries.mp4"
+            title={<>The <b>Revolutionaries</b></>}
+            description="Bhuvan Bam stars in an epic tale of India’s freedom struggle. Coming soon on Prime Video."
+            ctaText="Coming Soon"
+          />
+        </BentoTilt>
       </div>
 
-      {/* Revolutionaries teaser */}
-      <BentoTilt className="border-hsla relative mb-10 w-full h-96 md:h-[75vh]">
-        <BentoCard
-          src="videos/The Revolutionaries.mp4"
-          title={<>The <b>Revolutionaries</b></>}
-          description="Bhuvan Bam stars in an epic tale of India’s freedom struggle. Coming soon on Prime Video."
-          ctaText="Coming Soon"
-        />
-      </BentoTilt>
-
-      {/* Grid */}
+      {/* Grid of products */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
-        {/* Top row */}
         <BentoTilt className="h-[90vh]">
           <BentoCard
             src="img/t-1.webp"
@@ -144,7 +144,6 @@ const Features = () => (
           />
         </BentoTilt>
 
-        {/* Bottom row */}
         <BentoTilt className="h-[90vh]">
           <BentoCard
             src="videos/t-shirt.mp4"

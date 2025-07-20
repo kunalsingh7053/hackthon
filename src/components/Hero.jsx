@@ -153,6 +153,7 @@ const Hero = () => {
       });
     };
     return (
+      
       <div
         className="flex overflow-hidden cursor-pointer"
         onMouseEnter={handleMouseEnter}

@@ -4,6 +4,7 @@ import Loader from "./components/Loader";
 import NavBar from "./components/Navbar";
 import Mainroute from "./routes/Mainroute";
 import Lenis from '@studio-freight/lenis';
+import JellyCursor from "./components/JellyCursor";
 
 function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -11,10 +12,10 @@ function App() {
   useEffect(() => {
     if (!showLoader) {
       const lenis = new Lenis({
-        duration: 1.2,       // smooth speed (default 1.2)
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // custom easing
-        smooth: true,       // enable smooth scrolling
-        smoothTouch: false, // disable smooth on touch devices
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+        smoothTouch: false,
       });
 
       function raf(time) {
@@ -24,9 +25,7 @@ function App() {
 
       requestAnimationFrame(raf);
 
-      return () => {
-        lenis.destroy(); // clean up when component unmounts
-      };
+      return () => lenis.destroy();
     }
   }, [showLoader]);
 
@@ -36,8 +35,9 @@ function App() {
         {showLoader && <Loader setShowLoader={setShowLoader} />}
         {!showLoader && (
           <>
+            <JellyCursor /> {/* 👈 yahi pe add karo */}
             <NavBar />
-            <Mainroute /> {/* Saare route yaha render honge */}
+            <Mainroute />
           </>
         )}
       </main>
