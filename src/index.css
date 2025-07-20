@@ -274,3 +274,17 @@ body {
 button:active{
   scale:0.9;
 }
+/* Hide scrollbar for Chrome, Safari and Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+html {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Optional: prevent horizontal scroll */
+body {
+  overflow-x: hidden;
+}
