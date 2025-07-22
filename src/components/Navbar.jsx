@@ -151,7 +151,7 @@ const NavBar = () => {
         <nav className="flex items-center justify-between p-4 bg-black/60 rounded-xl backdrop-blur-md shadow-lg">
           {/* Left: logo + shop btn */}
           <div className="flex items-center gap-4">
-            <img src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg" alt="logo" className="w-10 h-10 rounded-full object-cover logo-img" />
+            <img src="https://i.pinimg.com/1200x/a1/e4/d4/a1e4d4d0a35d0b1bca7d7e6b830d4e27.jpg" alt="logo" className="w-10 h-10 rounded-full object-cover logo-img" onClick={()=>navigate("/profile")}/>
             <button
               ref={shopBtnRef}
               onClick={(e) => { e.preventDefault(); handleNavClick("/products"); }}

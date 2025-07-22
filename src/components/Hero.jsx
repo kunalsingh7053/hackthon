@@ -85,7 +85,6 @@ const Hero = () => {
 
     const handleMouseEnter = () => {
       const tl = gsap.timeline();
-
       tl.to(textEl, {
         rotate: 10,
         scale: 1.2,
@@ -103,14 +102,13 @@ const Hero = () => {
         scale: 1,
         duration: 0.2,
         ease: "power2.out",
-      }, "<"); // "<" means start at same time
-
+      }, "<");
       tl.to(iconEl, {
         rotate: 360,
         scale: 1.4,
         duration: 0.5,
         ease: "bounce.out",
-      }, 0); // start together
+      }, 0);
     };
 
     const handleMouseLeave = () => {
@@ -153,7 +151,6 @@ const Hero = () => {
       });
     };
     return (
-      
       <div
         className="flex overflow-hidden cursor-pointer"
         onMouseEnter={handleMouseEnter}
@@ -237,7 +234,9 @@ const Hero = () => {
               className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-bold"
             >
               <span ref={shopTextRef}>Shop Now</span>
-              <TiShoppingCart size={20} ref={cartIconRef} />
+              <span ref={cartIconRef}>
+                <TiShoppingCart size={20} />
+              </span>
             </button>
           </div>
         </div>
