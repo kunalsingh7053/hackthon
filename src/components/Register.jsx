@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-  const navigate = useNavigate();
+const Register = () => {
+    const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
 
   const handleChange = (e) => {
@@ -18,21 +20,30 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Login form submitted:', formData);
-    setFormData({ email: '', password: '' });
+    console.log('Register form submitted:', formData);
+    // Clear form after submit
+    setFormData({ username: '', email: '', password: '', confirmPassword: '' });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-      {/* Optional: background noise or gradient */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
         className="backdrop-blur-md bg-white/5 border border-white/20 rounded-2xl shadow-xl p-8 w-full max-w-md"
       >
-        <h2 className="text-3xl font-bold text-center mb-8 text-white">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <h2 className="text-3xl font-bold text-center mb-8 text-white">Create Account</h2>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <motion.input
+            whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
+          />
           <motion.input
             whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
             type="email"
@@ -51,21 +62,30 @@ const Login = () => {
             onChange={handleChange}
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          <motion.input
+            whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
+          />
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
             className="w-full bg-white/10 text-white p-3 rounded-md border border-white/20 hover:bg-white/20 transition"
           >
-            Login
+            Register
           </motion.button>
         </form>
         <p className="mt-5 text-sm text-center text-gray-400">
-          Don’t have an account? <span className="text-white underline cursor-pointer"  onClick={()=>navigate("/Register")}>Sign up</span>
+          Already have an account? <span className="text-white underline cursor-pointer" onClick={()=>navigate("/login")}>Login</span>
         </p>
       </motion.div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

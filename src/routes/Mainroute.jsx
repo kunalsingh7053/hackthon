@@ -4,6 +4,7 @@ import Products from "../components/Products";
 import Cart from "../components/Cart";
 import Login from "../components/Login";
 import Aboutauthor from "../components/Aboutauthor";
+import Register from "../components/Register";
 
 // Lazy load Home
 const Home = lazy(() => import("../components/Home"));
@@ -17,6 +18,7 @@ const Mainroute = () => {
         <Route path="/about" element={<Aboutauthor />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Suspense>
   );
