@@ -9,7 +9,7 @@ const Marquee = () => {
   const tweenRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Yellow/gold themed items
+  
   const marqueeItems = [
     { text: "New features added!", icon: "✨", color: "text-yellow-600" },
     { text: "Limited time offer!", icon: "🔥", color: "text-amber-600" },
@@ -24,7 +24,7 @@ const Marquee = () => {
     const container = containerRef.current;
     const contentWidth = marquee.scrollWidth / 2;
 
-    // Main animation
+    
     tweenRef.current = gsap.to(marquee, {
       x: -contentWidth,
       duration: 25,
@@ -35,7 +35,7 @@ const Marquee = () => {
       }
     });
 
-    // Scroll interaction
+    
     ScrollTrigger.create({
       trigger: container,
       start: "top bottom",
@@ -52,7 +52,7 @@ const Marquee = () => {
       }
     });
 
-    // Hover interaction
+    
     const handleHover = () => {
       gsap.to(tweenRef.current, {
         timeScale: 0.3,
@@ -78,7 +78,7 @@ const Marquee = () => {
       });
     };
 
-    // Click interaction
+    
     const handleClick = () => {
       gsap.to(".marquee-icon", {
         y: -30,

@@ -7,7 +7,7 @@ const Story = () => {
   const imgWrapperRef = useRef(null);
   const shineRef = useRef(null);
 
-  // Subtle floating animation
+  
   useEffect(() => {
     if (imgWrapperRef.current) {
       gsap.to(imgWrapperRef.current, {
@@ -20,7 +20,7 @@ const Story = () => {
     }
   }, []);
 
-  // Mouse move pe shine animate
+  
   const handleMouseMove = (e) => {
     const rect = imgWrapperRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -35,7 +35,7 @@ const Story = () => {
   const handleMouseLeave = () => {
     gsap.to(shineRef.current, {
       duration: 0.5,
-      x: -150, // hide outside
+      x: -150, 
       ease: "power2.out",
     });
   };

@@ -36,6 +36,18 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = ({ username, email }) => {
+    if (currentUser) {
+      const updatedUser = { ...currentUser, username, email };
+      setCurrentUser(updatedUser);
+      setUsers(prevUsers =>
+        prevUsers.map(u =>
+          u.email === currentUser.email ? updatedUser : u
+        )
+      );
+    }
+  };
+
   const logout = () => setCurrentUser(null);
 
   const registerUser = (userData) => {
@@ -52,6 +64,7 @@ export const AppProvider = ({ children }) => {
       setCurrentUser,
       register: registerUser,
       updateProfilePhoto,
+      updateProfile,
       logout
     }}>
       {children}

@@ -7,7 +7,7 @@ import Lenis from '@studio-freight/lenis';
 import JellyCursor from "./components/JellyCursor";
 import { ToastContainer } from 'react-toastify';
 
-// ⭐ import AppProvider
+
 import { AppProvider } from './context/AppContext';
 
 function App() {

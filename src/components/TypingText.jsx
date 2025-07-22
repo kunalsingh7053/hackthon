@@ -9,7 +9,7 @@ const TypingText = ({ text }) => {
     requestAnimationFrame(() => {
       const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
 
-      // typing in
+      
       tl.set(lettersRef.current, { opacity: 0 })
         .to(lettersRef.current, {
           opacity: 1,
@@ -17,9 +17,9 @@ const TypingText = ({ text }) => {
           ease: "none",
           stagger: 0.07,
         })
-        // pause after typing
+        
         .to({}, { duration: 1 }) 
-        // typing out
+        
         .to(lettersRef.current, {
           opacity: 0,
           duration: 0.05,

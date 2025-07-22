@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 const socialLinks = [
   { href: "https://discord.com", icon: <FaDiscord /> },
-  { href: "https://twitter.com", icon: <FaTwitter /> },
-  { href: "https://youtube.com", icon: <FaYoutube /> },
+  { href: "https://twitter.com/Bhuvan_Bam", icon: <FaTwitter /> },
+  { href: "https://www.youtube.com/@BBKiVines", icon: <FaYoutube /> },
   { href: "https://medium.com", icon: <FaMedium /> },
 ];
 
@@ -61,19 +61,6 @@ const Footer = () => {
           Privacy & Shanti Policy
         </motion.a>
       </div>
-
-      {showScrollTop && (
-        <motion.button
-          onClick={scrollToTop}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          whileHover={{ scale: 1.1 }}
-          className="fixed bottom-6 right-6 rounded-full bg-gradient-to-tr from-yellow-300 to-yellow-400 p-3 text-black shadow-lg backdrop-blur-sm"
-        >
-          ↑
-        </motion.button>
-      )}
     </motion.footer>
   );
 };
