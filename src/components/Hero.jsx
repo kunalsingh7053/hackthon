@@ -187,7 +187,7 @@ const Hero = () => {
             <VideoPreview>
               <div
                 onClick={handleMiniVdClick}
-                className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"
+                className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100 relative"
               >
                 <video
                   ref={nextVdRef}
@@ -198,6 +198,15 @@ const Hero = () => {
                   className="size-64 origin-center scale-150 object-cover object-center"
                   onLoadedData={handleVideoLoad}
                 />
+                {/* Center hint icon + text */}
+                <div
+                  className={`absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-500 ${
+                    hasClicked ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  <div className="text-white text-3xl animate-pulse">🔄</div>
+                  <span className="text-white text-xs mt-1">Click to change</span>
+                </div>
               </div>
             </VideoPreview>
           </div>

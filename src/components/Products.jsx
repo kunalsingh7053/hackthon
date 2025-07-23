@@ -2,11 +2,10 @@ import React from 'react'
 
 const Products = () => {
   return (
-    <div>
-      
-      roducts
+    <div className=' w-full h-screen '>
+    
     </div>
   )
 }
 
-export default Products
+export default Products;
