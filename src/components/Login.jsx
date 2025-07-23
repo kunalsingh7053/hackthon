@@ -8,9 +8,14 @@ import LightRays from '../../light/LightRays/LightRays';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { users, setCurrentUser } = useContext(AppContext);  
+  const { users, setCurrentUser } = useContext(AppContext);
 
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm();
 
   const onSubmit = (data) => {
     const foundUser = users.find(
@@ -18,12 +23,12 @@ const Login = () => {
     );
 
     if (foundUser) {
-      setCurrentUser(foundUser);   
+      setCurrentUser(foundUser);
       toast.success('Logged in successfully!');
-      navigate('/products');       
+      navigate('/products');
     } else {
       toast.error('Invalid email or password!');
-      navigate('/register');       
+      navigate('/register');
     }
 
     reset();
@@ -56,19 +61,27 @@ const Login = () => {
         <h2 className="text-3xl font-bold text-center mb-8 text-white">Login</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <motion.input
-            {...register('email', { required: true })}
+            {...register('email', { required: 'Email is required' })}
             whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
             type="email"
             placeholder="Email"
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          {errors.email && (
+            <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
+          )}
+
           <motion.input
-            {...register('password', { required: true })}
+            {...register('password', { required: 'Password is required' })}
             whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
             type="password"
             placeholder="Password"
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          {errors.password && (
+            <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
+          )}
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

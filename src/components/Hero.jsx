@@ -77,7 +77,6 @@ const Hero = () => {
     });
   }, []);
 
-  // GSAP hover animation for "Shop Now" text and cart icon
   useEffect(() => {
     const btn = document.getElementById("shop-now");
     const textEl = shopTextRef.current;
@@ -85,39 +84,14 @@ const Hero = () => {
 
     const handleMouseEnter = () => {
       const tl = gsap.timeline();
-      tl.to(textEl, {
-        rotate: 10,
-        scale: 1.2,
-        color: "#000000",
-        duration: 0.2,
-        ease: "power2.out",
-      })
-      .to(textEl, {
-        rotate: -10,
-        duration: 0.2,
-        ease: "power2.out",
-      })
-      .to(textEl, {
-        rotate: 0,
-        scale: 1,
-        duration: 0.2,
-        ease: "power2.out",
-      }, "<");
-      tl.to(iconEl, {
-        rotate: 360,
-        scale: 1.4,
-        duration: 0.5,
-        ease: "bounce.out",
-      }, 0);
+      tl.to(textEl, { rotate: 10, scale: 1.2, color: "#000", duration: 0.2, ease: "power2.out" })
+        .to(textEl, { rotate: -10, duration: 0.2, ease: "power2.out" })
+        .to(textEl, { rotate: 0, scale: 1, duration: 0.2, ease: "power2.out" }, "<");
+      tl.to(iconEl, { rotate: 360, scale: 1.4, duration: 0.5, ease: "bounce.out" }, 0);
     };
 
     const handleMouseLeave = () => {
-      gsap.to([textEl, iconEl], {
-        rotate: 0,
-        scale: 1,
-        duration: 0.3,
-        ease: "power2.inOut",
-      });
+      gsap.to([textEl, iconEl], { rotate: 0, scale: 1, duration: 0.3, ease: "power2.inOut" });
     };
 
     btn?.addEventListener("mouseenter", handleMouseEnter);
@@ -129,39 +103,20 @@ const Hero = () => {
     };
   }, []);
 
-  const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
+  const getVideoSrc = (index) => `/videos/hero-${index}.mp4`;
 
-  // AnimatedText component for hover reveal
   const AnimatedText = ({ text }) => {
     const lettersRef = useRef([]);
     const handleMouseEnter = () => {
-      gsap.to(lettersRef.current, {
-        y: "100%",
-        duration: 0.4,
-        ease: "power3.out",
-        stagger: 0.03,
-      });
+      gsap.to(lettersRef.current, { y: "100%", duration: 0.4, ease: "power3.out", stagger: 0.03 });
     };
     const handleMouseLeave = () => {
-      gsap.to(lettersRef.current, {
-        y: 0,
-        duration: 0.4,
-        ease: "power3.in",
-        stagger: 0.03,
-      });
+      gsap.to(lettersRef.current, { y: 0, duration: 0.4, ease: "power3.in", stagger: 0.03 });
     };
     return (
-      <div
-        className="flex overflow-hidden cursor-pointer"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className="flex overflow-hidden cursor-pointer" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         {text.split("").map((letter, i) => (
-          <span
-            key={i}
-            ref={(el) => (lettersRef.current[i] = el)}
-            className="inline-block translate-y-0"
-          >
+          <span key={i} ref={(el) => (lettersRef.current[i] = el)} className="inline-block translate-y-0">
             {letter}
           </span>
         ))}
@@ -172,12 +127,12 @@ const Hero = () => {
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
       {loading && (
-        <div className="flex-center absolute z-[100] h-dvh w-screen bg-violet-50">
-          <div className="three-body">
-            <div className="three-body__dot"></div>
-            <div className="three-body__dot"></div>
-            <div className="three-body__dot"></div>
-          </div>
+        <div className="absolute inset-0 z-[100] bg-black flex items-center justify-center">
+          <img 
+            src="/img/poster.webp" 
+            alt="Loading..." 
+            className="w-full h-full object-cover"
+          />
         </div>
       )}
 
@@ -194,16 +149,13 @@ const Hero = () => {
                   src={getVideoSrc((currentIndex % totalVideos) + 1)}
                   loop
                   muted
+                  preload="metadata"
+                  poster="/img/poster.webp"
                   id="current-video"
                   className="size-64 origin-center scale-150 object-cover object-center"
                   onLoadedData={handleVideoLoad}
                 />
-                {/* Center hint icon + text */}
-                <div
-                  className={`absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-500 ${
-                    hasClicked ? "opacity-0" : "opacity-100"
-                  }`}
-                >
+                <div className={`absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-500 ${hasClicked ? "opacity-0" : "opacity-100"}`}>
                   <div className="text-white text-3xl animate-pulse">🔄</div>
                   <span className="text-white text-xs mt-1">Click to change</span>
                 </div>
@@ -216,15 +168,20 @@ const Hero = () => {
             src={getVideoSrc(currentIndex)}
             loop
             muted
+            preload="metadata"
+            poster="/img/poster.webp"
             id="next-video"
             className="absolute-center invisible absolute z-20 size-64 object-cover object-center"
             onLoadedData={handleVideoLoad}
           />
+
           <video
             src={getVideoSrc(currentIndex === totalVideos - 1 ? 1 : currentIndex)}
             autoPlay
             loop
             muted
+            preload="metadata"
+            poster="/img/poster.webp"
             className="absolute left-0 top-0 size-full object-cover object-center"
             onLoadedData={handleVideoLoad}
           />
@@ -243,9 +200,7 @@ const Hero = () => {
               className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-bold"
             >
               <span ref={shopTextRef}>Shop Now</span>
-              <span ref={cartIconRef}>
-                <TiShoppingCart size={20} />
-              </span>
+              <span ref={cartIconRef}><TiShoppingCart size={20} /></span>
             </button>
           </div>
         </div>

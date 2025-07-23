@@ -1,25 +1,31 @@
-
 import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { AppContext } from '../context/AppContext';
-import LightRays from '../../light/LightRays/LightRays'; 
+import LightRays from '../../light/LightRays/LightRays';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { register: registerUser } = useContext(AppContext);  
+  const { register: registerUser } = useContext(AppContext);
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    watch,
+    formState: { errors }
   } = useForm();
 
   const onSubmit = (userData) => {
-    const success = registerUser(userData); 
+    // check if passwords match
+    if (userData.password !== userData.cpassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+
+    const success = registerUser(userData);
     if (success) {
       toast.success('Registered successfully!');
       navigate('/login');
@@ -28,6 +34,9 @@ const Register = () => {
     }
     reset();
   };
+
+  // watch password value for confirming password match
+  const password = watch("password", "");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
@@ -56,33 +65,56 @@ const Register = () => {
         <h2 className="text-3xl font-bold text-center mb-8 text-white">Create Account</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <motion.input
-            {...register("username", { required: true })}
+            {...register("username", { required: "Username is required" })}
             whileFocus={{ scale: 1.02 }}
             type="text"
             placeholder="Username"
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          {errors.username && (
+            <p className="text-red-400 text-xs mt-1">{errors.username.message}</p>
+          )}
+
           <motion.input
-            {...register("email", { required: true })}
+            {...register("email", { required: "Email is required" })}
             whileFocus={{ scale: 1.02 }}
             type="email"
             placeholder="Email"
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          {errors.email && (
+            <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
+          )}
+
           <motion.input
-            {...register("password", { required: true })}
+            {...register("password", {
+              required: "Password is required",
+              minLength: { value: 6, message: "Password must be at least 6 characters" }
+            })}
             whileFocus={{ scale: 1.02 }}
             type="password"
             placeholder="Password"
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          {errors.password && (
+            <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
+          )}
+
           <motion.input
-            {...register("cpassword", { required: true })}
+            {...register("cpassword", {
+              required: "Confirm password is required",
+              validate: value =>
+                value === password || "Passwords do not match"
+            })}
             whileFocus={{ scale: 1.02 }}
             type="password"
             placeholder="Confirm Password"
             className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
           />
+          {errors.cpassword && (
+            <p className="text-red-400 text-xs mt-1">{errors.cpassword.message}</p>
+          )}
+
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
