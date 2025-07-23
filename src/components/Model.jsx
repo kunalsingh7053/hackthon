@@ -5,7 +5,7 @@ const Model = () => {
     <div className="w-full h-screen flex flex-col items-center justify-center px-4 text-center">
       {/* Brand tagline */}
       <p className="text-gray-500 text-sm md:text-base mb-2 tracking-widest uppercase">
-        Exclusive Drop by Youthiapa
+        Exclusive Drop By Youthiapa
       </p>
 
       {/* Title */}
