@@ -6,10 +6,9 @@ const Loader = ({ setShowLoader }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = [
-    "https://youthiapa.com/cdn/shop/files/bb-modified.jpg?v=1750000289&width=1100",
-    "https://i.pinimg.com/736x/bc/61/2d/bc612d638b1622ba6549981d0d1bb1c5.jpg",
-    "https://i.pinimg.com/736x/0c/85/cf/0c85cf78b4e9a1fa032ab1e333055440.jpg",
-    "https://i.pinimg.com/1200x/48/fc/dd/48fcddb801ff7aac922b3818a29c702d.jpg",
+    "/img/l-1.webp",
+    "/img/l-2.webp",
+    "/img/l-3.webp"
   ];
 
   useEffect(() => {
@@ -20,8 +19,8 @@ const Loader = ({ setShowLoader }) => {
       if (i >= images.length) clearInterval(interval);
     }, 1500);
 
-    // Hide loader after total ~6s
-    const timeout = setTimeout(() => setShowLoader(false), 6000);
+    // Hide loader after ~4.5s
+    const timeout = setTimeout(() => setShowLoader(false), images.length * 1500);
 
     return () => {
       clearInterval(interval);
@@ -39,7 +38,7 @@ const Loader = ({ setShowLoader }) => {
       className="fixed inset-0 z-50 bg-black flex items-center justify-center gap-4 sm:gap-8"
       initial={{ opacity: 1 }}
       animate={{ opacity: 0, display: "none" }}
-      transition={{ delay: 5.5, duration: 0.5 }}
+      transition={{ delay: (images.length * 1.5) - 0.5, duration: 0.5 }}
     >
       <motion.h1
         className="text-[#CBB7D2] font-bold text-[10vw] sm:text-[70px]"
