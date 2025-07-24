@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../context/AppContext';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
 
 const Checkout = () => {
   const { currentUser } = useContext(AppContext);
