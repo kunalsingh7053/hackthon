@@ -130,7 +130,7 @@ const Features = () => (
 
         <BentoTilt className="border-hsla relative w-full h-96 md:h-[75vh]">
           <BentoCard
-            src="videos/The Revolutionaries.mp4"
+            src="videos/The Revolutionaries.webm"
             title={<>The <b>Revolutionaries</b></>}
             description="Bhuvan Bam stars in an epic tale of India’s freedom struggle. Coming soon on Prime Video."
             ctaText="Coming Soon"
@@ -152,7 +152,7 @@ const Features = () => (
 
         <BentoTilt className="h-[90vh]">
           <BentoCard
-            src="videos/hoodie.mp4"
+            src="videos/hoodie.webm"
             title={<>H<b>oodies</b> Drop</>}
             description="Cozy up in style with BB Ki Vines hoodies!"
             ctaText="Coming Soon"
@@ -161,7 +161,7 @@ const Features = () => (
 
         <BentoTilt className="h-[90vh]">
           <BentoCard
-            src="videos/t-shirt.mp4"
+            src="videos/t-shirt.webm"
             title={<>T-<b>Shirts</b> Showcase</>}
             description="Discover our latest tee collection in motion – style meets attitude!"
             ctaText="Coming Soon"
