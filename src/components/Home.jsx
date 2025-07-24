@@ -52,8 +52,8 @@ const Home = () => {
       </div>
 
       <Suspense fallback={<div className="text-center my-10 text-yellow-400">Loading...</div>}>
-      <Model/>
       <Marquee/>
+      <Model/>
         <About />
         <Features />
         <Story />

@@ -7,6 +7,8 @@ import Aboutauthor from "../components/Aboutauthor";
 import Register from "../components/Register";
 import Profile from "../components/Profile";
 import { AppContext } from "../context/AppContext"; 
+import ProductDetail from "../components/ProductDetail";
+import Checkout from "../components/Checkout";
 
 const Home = lazy(() => import("../components/Home"));
 
@@ -17,10 +19,24 @@ const Mainroute = () => {
     <Suspense fallback={<div className="text-center my-10">Loading...</div>}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
         <Route path="/about" element={<Aboutauthor />} />
+        <Route path="/products" element={<Products />} />
 
-        {/* ✅ Protect cart route */}
+
+
+        <Route
+          path="/product/:id"
+          element={
+            currentUser ? <ProductDetail /> : <Navigate to="/login" replace />
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            currentUser ? <Checkout />  : <Navigate to="/login" replace />
+          }
+        />
+
         <Route
           path="/cart"
           element={
@@ -28,7 +44,6 @@ const Mainroute = () => {
           }
         />
 
-        {/* ✅ Protect profile route */}
         <Route
           path="/profile"
           element={

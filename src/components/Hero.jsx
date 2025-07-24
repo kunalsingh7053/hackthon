@@ -16,22 +16,12 @@ const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(1);
   const [hasClicked, setHasClicked] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [loadedVideos, setLoadedVideos] = useState(0);
-  const totalVideos = 4;
 
+  const totalVideos = 2; // only hero-1 and hero-2 left
   const nextVdRef = useRef(null);
   const shopTextRef = useRef(null);
   const cartIconRef = useRef(null);
-
-  const handleVideoLoad = () => {
-    setLoadedVideos((prev) => prev + 1);
-  };
-
-  useEffect(() => {
-    if (loadedVideos === totalVideos - 1) {
-      setLoading(false);
-    }
-  }, [loadedVideos]);
+  const mainVideoRef = useRef(null);
 
   const handleMiniVdClick = () => {
     setHasClicked(true);
@@ -77,6 +67,19 @@ const Hero = () => {
     });
   }, []);
 
+  // loader hide when main video loaded
+  useEffect(() => {
+    const video = mainVideoRef.current;
+    if (video) {
+      const onLoad = () => {
+        setLoading(false);
+      };
+      video.addEventListener("loadeddata", onLoad);
+      return () => video.removeEventListener("loadeddata", onLoad);
+    }
+  }, [currentIndex]);
+
+  // Hover animation for "Shop Now"
   useEffect(() => {
     const btn = document.getElementById("shop-now");
     const textEl = shopTextRef.current;
@@ -127,17 +130,18 @@ const Hero = () => {
   return (
     <div className="relative h-dvh w-screen overflow-x-hidden">
       {loading && (
-        <div className="absolute inset-0 z-[100] bg-black flex items-center justify-center">
-          <img 
-            src="/img/poster.webp" 
-            alt="Loading..." 
-            className="w-full h-full object-cover"
-          />
+        <div className="flex-center absolute z-[100] h-dvh w-screen bg-violet-50">
+          <div className="three-body">
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+          </div>
         </div>
       )}
 
       <div id="video-frame" className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75">
         <div>
+          {/* mini preview */}
           <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
             <VideoPreview>
               <div
@@ -149,11 +153,11 @@ const Hero = () => {
                   src={getVideoSrc((currentIndex % totalVideos) + 1)}
                   loop
                   muted
+                  playsInline
                   preload="metadata"
                   poster="/img/poster.webp"
                   id="current-video"
                   className="size-64 origin-center scale-150 object-cover object-center"
-                  onLoadedData={handleVideoLoad}
                 />
                 <div className={`absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-500 ${hasClicked ? "opacity-0" : "opacity-100"}`}>
                   <div className="text-white text-3xl animate-pulse">🔄</div>
@@ -163,27 +167,30 @@ const Hero = () => {
             </VideoPreview>
           </div>
 
+          {/* hidden next video */}
           <video
             ref={nextVdRef}
             src={getVideoSrc(currentIndex)}
             loop
             muted
+            playsInline
             preload="metadata"
             poster="/img/poster.webp"
             id="next-video"
             className="absolute-center invisible absolute z-20 size-64 object-cover object-center"
-            onLoadedData={handleVideoLoad}
           />
 
+          {/* background main video */}
           <video
-            src={getVideoSrc(currentIndex === totalVideos - 1 ? 1 : currentIndex)}
+            ref={mainVideoRef}
+            src={getVideoSrc(currentIndex)}
             autoPlay
             loop
             muted
+            playsInline
             preload="metadata"
             poster="/img/poster.webp"
             className="absolute left-0 top-0 size-full object-cover object-center"
-            onLoadedData={handleVideoLoad}
           />
         </div>
 
