@@ -1,6 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
 
 const Model = () => {
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AppContext);  // get currentUser from context
+
+  const handleShopNow = () => {
+    if (currentUser) {
+      navigate('/product/p28');  // navigate if logged in
+    } else {
+      alert('Please login to continue!');
+      // optionally: navigate('/login');
+    }
+  };
+
   return (
     <div className="mt-10 w-full h-screen flex flex-col items-center justify-center px-4 text-center">
       {/* Brand tagline */}
@@ -33,7 +47,10 @@ const Model = () => {
         Crafted for comfort & style, the Youthiapa Jacket blends modern minimalism with streetwear edge. Elevate your everyday look.
       </p>
 
-      <button className="bg-black text-white px-5 py-2 rounded-full text-sm md:text-base hover:bg-gray-800 transition">
+      <button
+        onClick={handleShopNow}
+        className="bg-black text-white px-5 py-2 rounded-full text-sm md:text-base hover:bg-gray-800 transition"
+      >
         Shop Now
       </button>
     </div>

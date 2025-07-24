@@ -2,8 +2,10 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import Button from "./Button";
 import AnimatedTitle from "./AnimatedTitle";
+import { useNavigate } from "react-router-dom";
 
 const Story = () => {
+  const navigate  = useNavigate();
   const imgWrapperRef = useRef(null);
   const shineRef = useRef(null);
 
@@ -90,7 +92,9 @@ const Story = () => {
         <br /> Join the madness!
       </p>
 
-      <Button title="Check Collection 🛒" containerClass="mt-2" />
+      <button className="mt-2 border bg-white rounded px-4 py-2 text-black" onClick={()=>navigate("/products")} >
+        Check Collection 🛒
+      </button>
     </div>
   );
 };

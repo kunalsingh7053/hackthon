@@ -1,5 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { TiLocationArrow } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from '../context/AppContext';
 
 export const BentoTilt = ({ children, className = "" }) => {
   const [transformStyle, setTransformStyle] = useState("");
@@ -37,8 +39,12 @@ export const BentoCard = ({
   title,
   description,
   ctaText = "Coming Soon",
-  isImage = false
+  isImage = false,
+  productId
 }) => {
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AppContext);
+
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [hoverOpacity, setHoverOpacity] = useState(0);
   const hoverButtonRef = useRef(null);
@@ -50,6 +56,16 @@ export const BentoCard = ({
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     });
+  };
+
+  const handleClick = () => {
+    if (ctaText === "Explore Now" && productId) {
+      if (currentUser) {
+        navigate(`/product/${productId}`);
+      } else {
+        alert("Please login first to explore!");
+      }
+    }
   };
 
   return (
@@ -82,6 +98,7 @@ export const BentoCard = ({
           onMouseMove={handleMouseMove}
           onMouseEnter={() => setHoverOpacity(1)}
           onMouseLeave={() => setHoverOpacity(0)}
+          onClick={handleClick}
           className="border-hsla relative flex w-fit cursor-pointer items-center gap-1 overflow-hidden rounded-full bg-black px-5 py-2 text-xs uppercase text-white"
         >
           <div
@@ -102,7 +119,6 @@ export const BentoCard = ({
 const Features = () => (
   <section className="bg-black pb-32">
     <div className="container mx-auto px-3 md:px-10">
-      {/* Text + teaser wrapper */}
       <div className="px-5 py-20">
         <p className="font-circular-web text-lg text-blue-50 mb-4 md:mb-5 mt-5">
           Welcome to the World of <b>Youthiapa</b>
@@ -112,7 +128,6 @@ const Features = () => (
           merch, and madness.
         </p>
 
-        {/* Teaser video: always below text */}
         <BentoTilt className="border-hsla relative w-full h-96 md:h-[75vh]">
           <BentoCard
             src="videos/The Revolutionaries.mp4"
@@ -123,7 +138,6 @@ const Features = () => (
         </BentoTilt>
       </div>
 
-      {/* Grid of products */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
         <BentoTilt className="h-[90vh]">
           <BentoCard
@@ -132,6 +146,7 @@ const Features = () => (
             description="Style that speak memes!"
             ctaText="Explore Now"
             isImage
+            productId="p16"
           />
         </BentoTilt>
 
@@ -160,6 +175,7 @@ const Features = () => (
             description="Sleek, fearless and iconic — discover the new drop inspired by bold individuality."
             ctaText="Explore Now"
             isImage
+            productId="p2"
           />
         </BentoTilt>
       </div>

@@ -139,11 +139,14 @@ const Products = () => {
             <p className="text-gray-500">No products found for selected filters.</p>
           ) : (
             filteredProducts.map(product => (
-              <div key={product.id} className="bg-white rounded-lg shadow p-4 flex flex-col">
+              <div
+                key={product.id}
+                className="bg-white rounded-lg shadow p-4 flex flex-col transform transition duration-300 hover:scale-105 hover:shadow-lg opacity-0 animate-fadeIn"
+              >
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-60 object-contain mb-4"
+                  className="w-full h-60 object-contain mb-4 transition-transform duration-300 hover:scale-105"
                 />
                 <h3 className="font-semibold text-lg mb-1">{product.title}</h3>
                 <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
@@ -154,7 +157,7 @@ const Products = () => {
                 <select
                   value={selectedSizes[product.id] || ''}
                   onChange={(e) => handleSizeChange(product.id, e.target.value)}
-                  className="border border-gray-300 rounded px-2 py-1 mb-2 text-sm"
+                  className="border border-gray-300 rounded px-2 py-1 mb-2 text-sm transition-colors duration-300"
                 >
                   <option value="">Select Size</option>
                   <option value="S">S</option>
@@ -165,7 +168,7 @@ const Products = () => {
                 <button
                   onClick={() => handleAddToCart(product)}
                   disabled={!selectedSizes[product.id]}
-                  className={`w-full py-2 rounded ${
+                  className={`w-full py-2 rounded transition-colors duration-300 ${
                     selectedSizes[product.id]
                       ? 'bg-black text-white hover:bg-gray-800'
                       : 'bg-gray-300 text-gray-600 cursor-not-allowed'
@@ -175,7 +178,7 @@ const Products = () => {
                 </button>
                 <button
                   onClick={() => navigate(`/product/${product.id}`)}
-                  className="mt-2 text-sm text-blue-600 hover:underline"
+                  className="mt-2 text-sm text-blue-600 hover:underline transition-colors duration-300"
                 >
                   View Details
                 </button>

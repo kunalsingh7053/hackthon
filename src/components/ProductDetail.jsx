@@ -1,160 +1,99 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
-import { useNavigate } from 'react-router-dom';
 
-const Products = () => {
+const ProductDetail = () => {
+  const { id } = useParams();
   const { products, addToCart } = useContext(AppContext);
-  const navigate = useNavigate();
 
-  // States for filters
-  const [search, setSearch] = useState('');
-  const [priceRange, setPriceRange] = useState([0, 2000]);
-  const [sizeFilter, setSizeFilter] = useState('');
-  const [minRating, setMinRating] = useState(0);
-  const [selectedSizes, setSelectedSizes] = useState({});
+  const product = products.find(p => p.id === id);
+  const [selectedSize, setSelectedSize] = useState('');
 
-  const handleSizeChange = (productId, size) => {
-    setSelectedSizes(prev => ({ ...prev, [productId]: size }));
-  };
+  // Memoize random rating & reviews so it stays same on rerender
+  const { rating, reviews } = useMemo(() => {
+    const randomRating = (Math.random() * 1.5 + 3.5).toFixed(1); // Between 3.5 - 5.0
+    const randomReviews = Math.floor(Math.random() * 400 + 50);   // 50 - 450 reviews
+    return { rating: randomRating, reviews: randomReviews };
+  }, [id]);
 
-  const handleAddToCart = (product) => {
-    const size = selectedSizes[product.id];
-    if (size) {
-      addToCart(product.id, size);
-      alert('Added to cart!');
-    } else {
+  const handleAddToCart = () => {
+    if (!selectedSize) {
       alert('Please select a size!');
+      return;
     }
+    addToCart(product.id, selectedSize);
+    alert('Added to cart!');
   };
 
-  // Filtered products logic
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
-    const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
-    const matchesSize = sizeFilter ? p.size === sizeFilter : true;
-
-    // Random rating for demonstration (better if you store rating with product)
-    const randomRating = Math.random() * 1.5 + 3.5;
-    const matchesRating = randomRating >= minRating;
-
-    return matchesSearch && matchesPrice && matchesSize && matchesRating;
-  });
+  if (!product) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <p className="text-gray-500 mb-4">Product not found</p>
+        <Link to="/" className="text-blue-600 hover:underline">Back to Products</Link>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl sm:text-4xl font-extrabold text-center mb-6 text-gray-800">
-        Our Collection
-      </h1>
-
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-2 flex-1"
-        />
-
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-700">Min Rating:</label>
-          <select
-            value={minRating}
-            onChange={e => setMinRating(Number(e.target.value))}
-            className="border border-gray-300 rounded px-2 py-1"
-          >
-            <option value={0}>All</option>
-            <option value={3.5}>3.5+</option>
-            <option value={4}>4+</option>
-            <option value={4.5}>4.5+</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-700">Size:</label>
-          <select
-            value={sizeFilter}
-            onChange={e => setSizeFilter(e.target.value)}
-            className="border border-gray-300 rounded px-2 py-1"
-          >
-            <option value="">All</option>
-            <option value="S">S</option>
-            <option value="M">M</option>
-            <option value="L">L</option>
-            <option value="XL">XL</option>
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-700">Price:</label>
-          <input
-            type="number"
-            placeholder="Min"
-            value={priceRange[0]}
-            onChange={e => setPriceRange([Number(e.target.value), priceRange[1]])}
-            className="w-20 border border-gray-300 rounded px-2 py-1"
+    <div className="mt-20 container mx-auto px-4 pt-12 pb-8">
+      <Link to="/" className="text-blue-600 hover:underline mb-4 inline-block">
+        ← Back to Products
+      </Link>
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex-1">
+          <img
+            src={product.image}
+            alt={product.title}
+            className="w-full h-auto rounded-xl shadow"
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/500';
+            }}
           />
-          <span>–</span>
-          <input
-            type="number"
-            placeholder="Max"
-            value={priceRange[1]}
-            onChange={e => setPriceRange([priceRange[0], Number(e.target.value)])}
-            className="w-20 border border-gray-300 rounded px-2 py-1"
-          />
+        </div>
+        <div className="flex-1">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4">{product.title}</h1>
+          <p className="text-gray-700 mb-4">{product.description}</p>
+          <p className="text-xl font-semibold text-gray-900 mb-4">₹{product.price}</p>
+
+          {/* Rating */}
+          <div className="flex items-center mb-4">
+            <span className="text-yellow-400 text-lg mr-1">★</span>
+            <span className="text-yellow-400 text-lg mr-1">★</span>
+            <span className="text-yellow-400 text-lg mr-1">★</span>
+            <span className="text-yellow-400 text-lg mr-1">★</span>
+            <span className={`text-yellow-400 text-lg ${rating >= 4.8 ? '' : 'opacity-30'}`}>★</span>
+            <span className="ml-2 text-gray-600">({rating} • {reviews} reviews)</span>
+          </div>
+
+          {/* Size selector */}
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-1">Select Size:</label>
+            <select
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+              className="border border-gray-300 rounded px-2 py-1"
+            >
+              <option value="">Select Size</option>
+              <option value="S">S</option>
+              <option value="M">M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+            </select>
+          </div>
+
+          <button
+            onClick={handleAddToCart}
+            disabled={!selectedSize}
+            className={`bg-black text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition ${
+              !selectedSize ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
-
-      {/* Products */}
-      {filteredProducts.length === 0 ? (
-        <p className="text-gray-500">No products found for selected filters.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProducts.map(product => (
-            <div key={product.id} className="bg-white rounded-2xl shadow-lg p-4 flex flex-col">
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-60 object-contain mb-4"
-              />
-
-              <h2 className="text-lg font-bold mb-1">{product.title}</h2>
-              <p className="text-gray-600 text-sm mb-3">{product.description}</p>
-
-              <div className="flex justify-between mb-3">
-                <span className="font-semibold">₹{product.price}</span>
-                <span className="text-yellow-500">★ {(Math.random() * 1.5 + 3.5).toFixed(1)}</span>
-              </div>
-
-              <select
-                value={selectedSizes[product.id] || ''}
-                onChange={(e) => handleSizeChange(product.id, e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1 mb-3"
-              >
-                <option value="">Select Size</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-              </select>
-
-              <button
-                onClick={() => handleAddToCart(product)}
-                className={`px-4 py-2 rounded ${
-                  selectedSizes[product.id]
-                    ? 'bg-black text-white hover:bg-gray-800'
-                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                }`}
-                disabled={!selectedSizes[product.id]}
-              >
-                Add to Cart
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
 
-export default Products;
+export default ProductDetail;

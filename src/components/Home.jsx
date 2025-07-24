@@ -1,8 +1,7 @@
-import React, { Suspense, lazy, useRef, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import Hero from '../components/Hero';
 import Marquee from './Marquee';
 import Model from './Model';
-
 
 const About = lazy(() => import('../components/About'));
 const Features = lazy(() => import('../components/Features'));
@@ -11,29 +10,20 @@ const Contact = lazy(() => import('../components/Contact'));
 const Footer = lazy(() => import('../components/Footer'));
 
 const Home = () => {
-  const audioRef = useRef(null);
-  const [atTop, setAtTop] = useState(true); 
+  const [atTop, setAtTop] = useState(true);
 
-  
   useEffect(() => {
     const handleScroll = () => {
-      setAtTop(window.scrollY < 100); 
+      setAtTop(window.scrollY < 100);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleButtonClick = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
-    }
-
     if (atTop) {
-      
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     } else {
-      
       const heroSection = document.getElementById('hero');
       if (heroSection) {
         heroSection.scrollIntoView({ behavior: 'smooth' });
@@ -45,15 +35,13 @@ const Home = () => {
 
   return (
     <>
-      <audio ref={audioRef} src="/audio/top.wav" preload="auto" />
-
       <div id="hero">
         <Hero />
       </div>
 
       <Suspense fallback={<div className="text-center my-10 text-yellow-400">Loading...</div>}>
-      <Marquee/>
-      <Model/>
+        <Marquee />
+        <Model />
         <About />
         <Features />
         <Story />
