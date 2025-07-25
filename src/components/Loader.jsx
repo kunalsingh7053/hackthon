@@ -54,11 +54,15 @@ const Loader = ({ setShowLoader }) => {
           <motion.img
             key={index}
             src={src}
+            srcSet={`${src} 600w`}
+            sizes="(max-width: 768px) 300px, 600px"
             alt="slide"
             className="absolute top-0 left-0 w-full h-full object-cover"
             initial={{ opacity: 0 }}
             animate={{ opacity: currentIndex === index ? 1 : 0 }}
             transition={{ duration: 0.8 }}
+            // Add fetchpriority=high only for first image to help LCP
+            {...(index === 0 ? { fetchpriority: "high" } : {})}
           />
         ))}
       </div>

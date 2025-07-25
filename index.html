@@ -28,11 +28,27 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/img/fiveicon.png" />
 
-    <!-- Scripts -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    <!-- ✅ Preload CSS (replace with your actual hashed filename if it changes) -->
+    <link rel="preload" href="/assets/index-DvHAn_cM.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/assets/index-DvHAn_cM.css"></noscript>
+
+    <!-- ✅ Preload local fonts -->
+    <link rel="preload" href="/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/Manrope-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/Manrope-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/Manrope-Bold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- ✅ Preload LCP image -->
+    <link rel="preload" as="image" href="/img/l-1.webp" fetchpriority="high">
+
+    <!-- ✅ Preload main JS bundle (replace filename if it changes on build) -->
+    <link rel="preload" href="/assets/index-D5Ks0qhY.js" as="script">
   </head>
   <body>
     <div id="root"></div>
+    <!-- Main React script -->
     <script type="module" src="/src/main.jsx"></script>
+    <!-- ✅ Defer model-viewer so it doesn't block initial paint -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   </body>
 </html>
