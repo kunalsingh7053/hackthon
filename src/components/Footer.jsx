@@ -29,14 +29,23 @@ const Footer = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative w-full bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-700/90 py-6 backdrop-blur-sm text-white"
+      className="relative w-full bg-black text-white overflow-hidden pt-6"
     >
-      <div className="container mx-auto flex flex-col items-center justify-between gap-6 px-4 md:flex-row border-t border-white/20 pt-4">
+      {/* Decorative blurred circles */}
+      <div className="absolute top-0 left-0 w-40 h-40 bg-yellow-400 rounded-full blur-3xl opacity-10"></div>
+      <div className="absolute bottom-0 right-0 w-52 h-52 bg-yellow-400 rounded-full blur-3xl opacity-10"></div>
+
+      {/* Top glowing border */}
+      <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400/0 via-yellow-400 to-yellow-400/0 opacity-40"></div>
+
+      <div className="relative container mx-auto flex flex-col md:flex-row items-center justify-between gap-6 px-4 border-t border-white/10 pt-4 pb-6">
+        {/* Left text */}
         <div className="text-center md:text-left space-y-1">
           <p className="text-sm font-light">© Youthiapa 2025. Dil se Banaya.</p>
-          <p className="text-xs font-extralight text-white/70">Made with ❤️ in India</p>
+          <p className="text-xs font-extralight text-white/60">Made with ❤️ in India</p>
         </div>
 
+        {/* Social icons */}
         <div className="flex gap-5">
           {socialLinks.map((link, index) => (
             <motion.a
@@ -46,21 +55,35 @@ const Footer = () => {
               rel="noopener noreferrer"
               whileHover={{ y: -3, scale: 1.15 }}
               whileTap={{ scale: 0.95 }}
-              className="text-xl text-white hover:text-yellow-300 transition-colors duration-300"
+              className="text-xl hover:text-yellow-400 transition-colors duration-300"
             >
               {link.icon}
             </motion.a>
           ))}
         </div>
 
+        {/* Privacy link */}
         <motion.a
           href="#privacy-policy"
           whileHover={{ scale: 1.08 }}
-          className="text-sm font-light underline underline-offset-4 hover:text-yellow-300 transition-colors duration-300"
+          className="text-sm font-light underline underline-offset-4 hover:text-yellow-400 transition-colors duration-300"
         >
           Privacy & Shanti Policy
         </motion.a>
       </div>
+
+      {/* Scroll to top button */}
+      {showScrollTop && (
+        <motion.button
+          onClick={scrollToTop}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="fixed bottom-6 right-6 bg-yellow-400 text-black p-2 rounded-full shadow-lg hover:bg-yellow-300 transition-colors duration-300"
+          aria-label="Scroll to top"
+        >
+          ↑
+        </motion.button>
+      )}
     </motion.footer>
   );
 };

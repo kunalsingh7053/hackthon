@@ -16,9 +16,9 @@ const Model = () => {
   };
 
   return (
-    <div className="mt-10 w-full h-screen flex flex-col items-center justify-center px-4 text-center">
+    <div className=" w-full h-screen flex flex-col items-center justify-center px-4 text-center bg-black">
       {/* Brand tagline */}
-      <p className="text-gray-500 text-sm md:text-base mb-2 tracking-widest uppercase">
+      <p className="text-white text-sm md:text-base mb-2 tracking-widest uppercase">
         Exclusive Drop By Youthiapa
       </p>
 
@@ -26,7 +26,7 @@ const Model = () => {
         Youthiapa Jacket
       </h1>
 
-      <p className="text-gray-700 mb-4 text-sm md:text-base tracking-wide">
+      <p className="text-gray-400 mb-4 text-sm md:text-base tracking-wide">
         Limited Edition Collection
       </p>
 
@@ -43,13 +43,13 @@ const Model = () => {
         className="mb-4"
       ></model-viewer>
 
-      <p className="text-gray-600 max-w-md mb-4 text-sm md:text-base">
+      <p className="text-gray-400 max-w-md mb-4 text-sm md:text-base">
         Crafted for comfort & style, the Youthiapa Jacket blends modern minimalism with streetwear edge. Elevate your everyday look.
       </p>
 
       <button
         onClick={handleShopNow}
-        className="bg-black text-white px-5 py-2 rounded-full text-sm md:text-base hover:bg-gray-800 transition"
+        className="mb-10 bg-white text-black px-5 py-2 rounded-full text-sm md:text-base hover:bg-gray-800 transition"
       >
         Shop Now
       </button>

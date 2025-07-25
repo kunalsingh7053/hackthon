@@ -45,7 +45,7 @@ const Story = () => {
   return (
     <div
       id="story"
-      className="min-h-dvh w-screen bg-black text-blue-50 flex flex-col items-center justify-center py-16"
+      className="min-h-dvh w-screen  text-blue-50 flex flex-col items-center justify-center py-16"
     >
       <p className="font-general text-[10px] uppercase tracking-widest mb-4">
         #BBKiPublic
@@ -87,7 +87,7 @@ const Story = () => {
         ></div>
       </div>
 
-      <p className="max-w-md text-center font-circular-web text-violet-50 mb-4">
+      <p className="max-w-md text-center font-circular-web text-black mb-4">
         Premium merch for the tribe that laughs, lives, and vibes.
         <br /> Join the madness!
       </p>

@@ -6,8 +6,8 @@ import Model from './Model';
 const About = lazy(() => import('../components/About'));
 const Features = lazy(() => import('../components/Features'));
 const Story = lazy(() => import('../components/Story'));
-const Contact = lazy(() => import('../components/Contact'));
 const Footer = lazy(() => import('../components/Footer'));
+const JoinCommunity = lazy(()=>import('./JoinCommunity'));
 
 const Home = () => {
   const [atTop, setAtTop] = useState(true);
@@ -41,11 +41,11 @@ const Home = () => {
 
       <Suspense fallback={<div className="text-center my-10 text-yellow-400">Loading...</div>}>
         <Marquee />
-        <Model />
+        <Story />
         <About />
         <Features />
-        <Story />
-        <Contact />
+        <Model />
+        <JoinCommunity/>
         <Footer />
       </Suspense>
 

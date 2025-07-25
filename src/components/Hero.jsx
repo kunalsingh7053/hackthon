@@ -67,7 +67,6 @@ const Hero = () => {
     });
   }, []);
 
-  // loader hide when main video loaded
   useEffect(() => {
     const video = mainVideoRef.current;
     if (video) {
@@ -77,7 +76,6 @@ const Hero = () => {
     }
   }, [currentIndex]);
 
-  // Hover animation for "Shop Now"
   useEffect(() => {
     const btn = document.getElementById("shop-now");
     const textEl = shopTextRef.current;
@@ -106,6 +104,7 @@ const Hero = () => {
 
   const getVideoSrc = (index, ext = 'webm') => `/videos/hero-${index}.${ext}`;
 
+  // AnimatedText with text stroke
   const AnimatedText = ({ text }) => {
     const lettersRef = useRef([]);
     const handleMouseEnter = () => {
@@ -115,9 +114,17 @@ const Hero = () => {
       gsap.to(lettersRef.current, { y: 0, duration: 0.4, ease: "power3.in", stagger: 0.03 });
     };
     return (
-      <div className="flex overflow-hidden cursor-pointer" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div
+        className="flex overflow-hidden cursor-pointer"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         {text.split("").map((letter, i) => (
-          <span key={i} ref={(el) => (lettersRef.current[i] = el)} className="inline-block translate-y-0">
+          <span
+            key={i}
+            ref={(el) => (lettersRef.current[i] = el)}
+            className="inline-block translate-y-0 text-[#222222] stroke-white"
+          >
             {letter}
           </span>
         ))}
@@ -138,7 +145,7 @@ const Hero = () => {
       )}
 
       <div id="video-frame" className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75">
-        {/* mini preview */}
+        {/* Mini preview */}
         <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
           <VideoPreview>
             <div
@@ -163,7 +170,7 @@ const Hero = () => {
           </VideoPreview>
         </div>
 
-        {/* hidden next video */}
+        {/* Hidden next video */}
         <video
           ref={nextVdRef}
           loop muted playsInline preload="metadata"
@@ -175,7 +182,7 @@ const Hero = () => {
           <source src={getVideoSrc(currentIndex, 'mp4')} type="video/mp4" />
         </video>
 
-        {/* background main video */}
+        {/* Main background video */}
         <video
           ref={mainVideoRef}
           autoPlay loop muted playsInline preload="metadata"
@@ -187,29 +194,25 @@ const Hero = () => {
         </video>
 
         <div className="absolute left-0 top-0 z-40 size-full mt-24 px-5 sm:px-10">
-          <h1 className="special-font hero-heading text-yellow-400">
+          <h1 className="special-font hero-heading">
             <AnimatedText text="Youthiapa" />
           </h1>
-          <TypingText text="Laugh. Relate. Repeat." />
+          <TypingText text="Laugh. Relate. Repeat." className="text-[#444444]" />
           <button
             id="shop-now"
             title="Shop Now"
             onClick={() => navigate("/products")}
-            className="bg-yellow-400 flex-center gap-1 text-black rounded p-2 font-bold"
+            className="flex items-center justify-center gap-1 bg-yellow-400 hover:bg-yellow-300 text-black rounded p-2 font-bold transition-colors duration-300"
           >
             <span ref={shopTextRef}>Shop Now</span>
             <span ref={cartIconRef}><TiShoppingCart size={20} /></span>
           </button>
         </div>
 
-        <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-yellow-400">
+        <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40">
           <AnimatedText text="BB Ki Vines" />
         </h1>
       </div>
-
-      <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
-        BB <b>Ki</b> Vines
-      </h1>
     </div>
   );
 };

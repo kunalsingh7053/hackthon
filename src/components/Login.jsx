@@ -1,14 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { AppContext } from '../context/AppContext';
 import LightRays from '../../light/LightRays/LightRays';
+import { FiEye, FiEyeOff } from 'react-icons/fi'; // optional eye icons
 
 const Login = () => {
   const navigate = useNavigate();
   const { users, setCurrentUser } = useContext(AppContext);
+  const [showPassword, setShowPassword] = useState(false); // state for password visibility
 
   const {
     register,
@@ -36,7 +38,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-      {/* 🔥 Add LightRays effect in background */}
+      {/* 🔥 LightRays background */}
       <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
         <LightRays
           raysOrigin="top-center"
@@ -71,13 +73,22 @@ const Login = () => {
             <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>
           )}
 
-          <motion.input
-            {...register('password', { required: 'Password is required' })}
-            whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
-          />
+          <div className="relative">
+            <motion.input
+              {...register('password', { required: 'Password is required' })}
+              whileFocus={{ scale: 1.02, borderColor: '#ffffff' }}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              className="w-full p-3 bg-transparent border border-white/30 rounded-md text-white placeholder-gray-400 outline-none focus:border-white transition"
+            />
+           <span
+  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+  onClick={() => setShowPassword(!showPassword)}
+>
+  {showPassword ? <FiEye /> : <FiEyeOff />}
+</span>
+
+          </div>
           {errors.password && (
             <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>
           )}
