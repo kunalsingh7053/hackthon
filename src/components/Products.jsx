@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Products = () => {
   const { products, addToCart } = useContext(AppContext);
@@ -11,18 +13,22 @@ const Products = () => {
   const [sizeFilter, setSizeFilter] = useState('');
   const [minRating, setMinRating] = useState(0);
   const [selectedSizes, setSelectedSizes] = useState({});
+  const [sizeErrors, setSizeErrors] = useState({});
 
   const handleSizeChange = (productId, size) => {
     setSelectedSizes(prev => ({ ...prev, [productId]: size }));
+    setSizeErrors(prev => ({ ...prev, [productId]: '' }));
   };
 
   const handleAddToCart = (product) => {
     const size = selectedSizes[product.id];
     if (size) {
       addToCart(product.id, size);
-      alert('Added to cart!');
+      setSizeErrors(prev => ({ ...prev, [product.id]: '' }));
+      toast.success('Added to cart!');
     } else {
-      alert('Please select a size!');
+      setSizeErrors(prev => ({ ...prev, [product.id]: 'Please select a size!' }));
+      toast.error('Please select a size!');
     }
   };
 
@@ -62,7 +68,6 @@ const Products = () => {
             </button>
           </div>
 
-          {/* Search */}
           <div className="mb-3">
             <input
               type="text"
@@ -73,7 +78,6 @@ const Products = () => {
             />
           </div>
 
-          {/* Price range */}
           <div className="mb-3">
             <label className="block text-gray-700 text-sm mb-1">Price Range</label>
             <div className="flex gap-1">
@@ -94,7 +98,6 @@ const Products = () => {
             </div>
           </div>
 
-          {/* Size */}
           <div className="mb-3">
             <label className="block text-gray-700 text-sm mb-1">Size</label>
             <select
@@ -110,7 +113,6 @@ const Products = () => {
             </select>
           </div>
 
-          {/* Rating */}
           <div className="mb-3">
             <label className="block text-gray-700 text-sm mb-1">Min Rating</label>
             <select
@@ -133,7 +135,7 @@ const Products = () => {
           </button>
         </aside>
 
-        {/* Products */}
+        {/* Products grid */}
         <main className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.length === 0 ? (
             <p className="text-gray-500">No products found for selected filters.</p>
@@ -141,7 +143,7 @@ const Products = () => {
             filteredProducts.map(product => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow p-4 flex flex-col transform transition duration-300 hover:scale-105 hover:shadow-lg opacity-0 animate-fadeIn"
+                className="bg-white rounded-lg shadow p-4 flex flex-col transform transition duration-300 hover:scale-105 hover:shadow-lg"
               >
                 <img
                   src={product.image}
@@ -154,6 +156,7 @@ const Products = () => {
                   <span className="font-semibold">₹{product.price}</span>
                   <span className="text-yellow-500">★ {(Math.random() * 1.5 + 3.5).toFixed(1)}</span>
                 </div>
+
                 <select
                   value={selectedSizes[product.id] || ''}
                   onChange={(e) => handleSizeChange(product.id, e.target.value)}
@@ -165,17 +168,22 @@ const Products = () => {
                   <option value="L">L</option>
                   <option value="XL">XL</option>
                 </select>
+
+                {sizeErrors[product.id] && (
+                  <p className="text-red-500 text-xs mb-2">{sizeErrors[product.id]}</p>
+                )}
+
                 <button
                   onClick={() => handleAddToCart(product)}
-                  disabled={!selectedSizes[product.id]}
                   className={`w-full py-2 rounded transition-colors duration-300 ${
                     selectedSizes[product.id]
                       ? 'bg-black text-white hover:bg-gray-800'
-                      : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                      : 'bg-gray-300 text-gray-600'
                   }`}
                 >
                   Add to Cart
                 </button>
+
                 <button
                   onClick={() => navigate(`/product/${product.id}`)}
                   className="mt-2 text-sm text-blue-600 hover:underline transition-colors duration-300"
