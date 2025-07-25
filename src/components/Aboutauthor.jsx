@@ -1,9 +1,8 @@
-
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ScrambledText from '../../scramble/ScrambledText/ScrambledText';
-import Galaxy from '../../galaxy/Galaxy/Galaxy'; 
+import Galaxy from '../../galaxy/Galaxy/Galaxy';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -180,7 +179,7 @@ const Aboutauthor = () => {
         />
       </div>
 
-      {/* Floating particles layer */}
+      {/* Floating particles */}
       <div ref={particleRef} className="absolute inset-0 pointer-events-none overflow-hidden" />
 
       {/* Gradient overlay */}
@@ -188,7 +187,10 @@ const Aboutauthor = () => {
 
       {/* Main content */}
       <div ref={containerRef} className="relative z-10 w-full max-w-6xl flex flex-col items-center justify-center">
-        <h2 ref={titleRef} className="text-4xl md:text-6xl font-bold mb-8 text-center tracking-tight">
+        <h2
+          ref={titleRef}
+          className="text-4xl md:text-6xl font-bold mb-8 text-center tracking-tight text-white stroke-black stroke-[1px]"
+        >
           About Youthiapa
         </h2>
 

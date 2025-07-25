@@ -23,7 +23,7 @@ const JoinCommunity = () => {
           </p>
           <button
             onClick={handleJoinClick}
-            className="bg-yellow-400 text-black px-6 py-2.5 rounded-md hover:bg-yellow-300 transition duration-300 font-medium tracking-wide text-sm sm:text-base"
+            className="bg-white text-black px-6 py-2.5 rounded-md hover:bg-yellow-300 transition duration-300 font-medium tracking-wide text-sm sm:text-base"
           >
             Join Now 🤙
           </button>

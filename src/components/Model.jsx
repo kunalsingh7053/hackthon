@@ -49,7 +49,7 @@ const Model = () => {
 
       <button
         onClick={handleShopNow}
-        className="mb-10 bg-white text-black px-5 py-2 rounded-full text-sm md:text-base hover:bg-gray-800 transition"
+        className="mb-10 bg-white text-black px-5 py-2 rounded-full text-sm md:text-base hover:bg-yellow-400 transition"
       >
         Shop Now
       </button>

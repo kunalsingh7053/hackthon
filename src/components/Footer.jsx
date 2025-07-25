@@ -72,18 +72,7 @@ const Footer = () => {
         </motion.a>
       </div>
 
-      {/* Scroll to top button */}
-      {showScrollTop && (
-        <motion.button
-          onClick={scrollToTop}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="fixed bottom-6 right-6 bg-yellow-400 text-black p-2 rounded-full shadow-lg hover:bg-yellow-300 transition-colors duration-300"
-          aria-label="Scroll to top"
-        >
-          ↑
-        </motion.button>
-      )}
+     
     </motion.footer>
   );
 };

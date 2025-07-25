@@ -332,3 +332,7 @@ body {
 .stroke-white {
   -webkit-text-stroke: 1px white;
 }
+.special-font {
+  -webkit-text-stroke: 1px white;
+  text-stroke: 1px white;
+}

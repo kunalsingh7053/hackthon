@@ -16,7 +16,6 @@ const About = () => {
         scrub: 0.5,
         pin: true,
         pinSpacing: true,
-        // Force low z-index when pinned so it stays under hero
         onEnter: () => gsap.set("#clip", { zIndex: 10 }),
         onLeave: () => gsap.set("#clip", { zIndex: 0 }),
         onEnterBack: () => gsap.set("#clip", { zIndex: 10 }),
@@ -42,10 +41,11 @@ const About = () => {
         <p className="font-general text-sm uppercase text-yellow-400 md:text-[10px]">
           Welcome to Youthiapa
         </p>
-      <AnimatedTitle
+       <AnimatedTitle
   title="Bhuvan Bam's <br /> Official Merch Brand"
- containerClass="mt-5 text-center !text-yellow-400 font-semibold tracking-wider leading-tight"
+  containerClass="mt-5 text-center font-semibold tracking-wider leading-tight text-black"
 />
+
         <div className="about-subtext text-center px-4 max-w-2xl">
           <p className="text-white">
             The comedy you love, now wearable. Created by Bhuvan Bam for fans everywhere.

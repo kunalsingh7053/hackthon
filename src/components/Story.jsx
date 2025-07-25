@@ -1,15 +1,13 @@
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
-import Button from "./Button";
 import AnimatedTitle from "./AnimatedTitle";
 import { useNavigate } from "react-router-dom";
 
 const Story = () => {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const imgWrapperRef = useRef(null);
   const shineRef = useRef(null);
 
-  
   useEffect(() => {
     if (imgWrapperRef.current) {
       gsap.to(imgWrapperRef.current, {
@@ -22,7 +20,6 @@ const Story = () => {
     }
   }, []);
 
-  
   const handleMouseMove = (e) => {
     const rect = imgWrapperRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -37,7 +34,7 @@ const Story = () => {
   const handleMouseLeave = () => {
     gsap.to(shineRef.current, {
       duration: 0.5,
-      x: -150, 
+      x: -150,
       ease: "power2.out",
     });
   };
@@ -45,7 +42,7 @@ const Story = () => {
   return (
     <div
       id="story"
-      className="min-h-dvh w-screen  text-blue-50 flex flex-col items-center justify-center py-16"
+      className="min-h-dvh w-screen text-blue-50 flex flex-col items-center justify-center py-16"
     >
       <p className="font-general text-[10px] uppercase tracking-widest mb-4">
         #BBKiPublic
@@ -53,8 +50,8 @@ const Story = () => {
 
       <AnimatedTitle
         title="Wear <b>a</b>ttitude. <br /> Spread <b>l</b>aughter."
-        containerClass="pointer-events-none mix-blend-difference relative z-10 mb-6"
-        className="special-font !md:text-[6rem] w-full font-zentry !text-5xl !font-black !leading-[.9]"
+        containerClass="relative z-10 mb-6 text-black"
+        className="special-font !md:text-[6rem] w-full !text-5xl !leading-[.9] text-black stroke-white stroke-[1px]"
       />
 
       <div
@@ -62,7 +59,6 @@ const Story = () => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className="relative mb-6 overflow-hidden rounded-xl shadow-lg w-60 sm:w-72 md:w-80 lg:w-96"
-        style={{ position: "relative" }}
       >
         <img
           src="/img/t-1.webp"
@@ -92,7 +88,10 @@ const Story = () => {
         <br /> Join the madness!
       </p>
 
-      <button className="mt-2 border bg-white rounded px-4 py-2 text-black" onClick={()=>navigate("/products")} >
+      <button
+        className="mt-2 border border-black bg-white rounded px-4 py-2 text-black  hover:bg-yellow-300 transition duration-300"
+        onClick={() => navigate("/products")}
+      >
         Check Collection 🛒
       </button>
     </div>
