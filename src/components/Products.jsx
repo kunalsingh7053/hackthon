@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Products = () => {
-  const { products, addToCart } = useContext(AppContext);
+  const { products, addToCart, currentUser } = useContext(AppContext);  // ✅ FIXED: use currentUser
   const navigate = useNavigate();
 
   const [search, setSearch] = useState('');
@@ -21,14 +21,23 @@ const Products = () => {
   };
 
   const handleAddToCart = (product) => {
+    console.log('DEBUG - currentUser:', currentUser);  // ✅ debugging
+
+    if (!currentUser || !currentUser.email) {
+      toast.error('Please login to add items to cart!');
+      return;
+    }
+
     const size = selectedSizes[product.id];
-    if (size) {
+    const needsSize = ['tshirt', 'hoodie', 'cargo', 'cloths'].includes(product.type);
+
+    if (needsSize && !size) {
+      setSizeErrors(prev => ({ ...prev, [product.id]: 'Please select a size!' }));
+      toast.error('Please select a size!');
+    } else {
       addToCart(product.id, size);
       setSizeErrors(prev => ({ ...prev, [product.id]: '' }));
       toast.success('Added to cart!');
-    } else {
-      setSizeErrors(prev => ({ ...prev, [product.id]: 'Please select a size!' }));
-      toast.error('Please select a size!');
     }
   };
 
@@ -62,7 +71,6 @@ const Products = () => {
             <button
               onClick={clearFilters}
               className="text-xs text-blue-600 hover:underline"
-              title="Clear All Filters"
             >
               Reset
             </button>
@@ -140,58 +148,65 @@ const Products = () => {
           {filteredProducts.length === 0 ? (
             <p className="text-gray-500">No products found for selected filters.</p>
           ) : (
-            filteredProducts.map(product => (
-              <div
-                key={product.id}
-                className="bg-white rounded-lg shadow p-4 flex flex-col transform transition duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-full h-60 object-contain mb-4 transition-transform duration-300 hover:scale-105"
-                />
-                <h3 className="font-semibold text-lg mb-1">{product.title}</h3>
-                <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
-                <div className="flex justify-between mb-3">
-                  <span className="font-semibold">₹{product.price}</span>
-                  <span className="text-yellow-500">★ {(Math.random() * 1.5 + 3.5).toFixed(1)}</span>
+            filteredProducts.map(product => {
+              const needsSize = ['tshirt', 'hoodie', 'cargo', 'cloths'].includes(product.type);
+
+              return (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-lg shadow p-4 flex flex-col transform transition duration-300 hover:scale-105 hover:shadow-lg"
+                >
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-60 object-contain mb-4 transition-transform duration-300 hover:scale-105"
+                  />
+                  <h3 className="font-semibold text-lg mb-1">{product.title}</h3>
+                  <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
+                  <div className="flex justify-between mb-3">
+                    <span className="font-semibold">₹{product.price}</span>
+                    <span className="text-yellow-500">★ {(Math.random() * 1.5 + 3.5).toFixed(1)}</span>
+                  </div>
+
+                  {needsSize && (
+                    <>
+                      <select
+                        value={selectedSizes[product.id] || ''}
+                        onChange={(e) => handleSizeChange(product.id, e.target.value)}
+                        className="border border-gray-300 rounded px-2 py-1 mb-2 text-sm transition-colors duration-300"
+                      >
+                        <option value="">Select Size</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                      </select>
+                      {sizeErrors[product.id] && (
+                        <p className="text-red-500 text-xs mb-2">{sizeErrors[product.id]}</p>
+                      )}
+                    </>
+                  )}
+
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className={`w-full py-2 rounded transition-colors duration-300 ${
+                      !needsSize || selectedSizes[product.id]
+                        ? 'bg-black text-white hover:bg-gray-800'
+                        : 'bg-gray-300 text-gray-600'
+                    }`}
+                  >
+                    Add to Cart
+                  </button>
+
+                  <button
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    className="mt-2 text-sm text-blue-600 hover:underline transition-colors duration-300"
+                  >
+                    View Details
+                  </button>
                 </div>
-
-                <select
-                  value={selectedSizes[product.id] || ''}
-                  onChange={(e) => handleSizeChange(product.id, e.target.value)}
-                  className="border border-gray-300 rounded px-2 py-1 mb-2 text-sm transition-colors duration-300"
-                >
-                  <option value="">Select Size</option>
-                  <option value="S">S</option>
-                  <option value="M">M</option>
-                  <option value="L">L</option>
-                  <option value="XL">XL</option>
-                </select>
-
-                {sizeErrors[product.id] && (
-                  <p className="text-red-500 text-xs mb-2">{sizeErrors[product.id]}</p>
-                )}
-
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className={`w-full py-2 rounded transition-colors duration-300 ${
-                    selectedSizes[product.id]
-                      ? 'bg-black text-white hover:bg-gray-800'
-                      : 'bg-gray-300 text-gray-600'
-                  }`}
-                >
-                  Add to Cart
-                </button>
-
-                <button
-                  onClick={() => navigate(`/product/${product.id}`)}
-                  className="mt-2 text-sm text-blue-600 hover:underline transition-colors duration-300"
-                >
-                  View Details
-                </button>
-              </div>
-            ))
+              );
+            })
           )}
         </main>
       </div>
